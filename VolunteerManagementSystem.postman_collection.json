@@ -1,0 +1,194 @@
+{
+  "info": {
+    "name": "Volunteer Management System API",
+    "_postman_id": "12345678-aaaa-bbbb-cccc-123456789abc",
+    "description": "API Collection for the Volunteer Management System built with Laravel 12",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/users"
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newuser@example.com\",\n  \"password_hash\": \"123456\",\n  \"user_type\": \"volunteer\",\n  \"is_active\": true\n}"
+            },
+            "url": "{{base_url}}/api/users"
+          }
+        },
+        {
+          "name": "Show User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/users/1"
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": false\n}"
+            },
+            "url": "{{base_url}}/api/users/1"
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{base_url}}/api/users/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/events"
+          }
+        },
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"organization_id\": 1,\n  \"event_name\": \"Beach Cleanup\",\n  \"description\": \"Community volunteer event\",\n  \"category\": \"Environment\",\n  \"event_date\": \"2025-12-05\",\n  \"start_time\": \"08:00:00\",\n  \"end_time\": \"12:00:00\",\n  \"location\": \"Manila Bay\",\n  \"max_volunteers\": 50\n}"
+            },
+            "url": "{{base_url}}/api/events"
+          }
+        },
+        {
+          "name": "Show Event",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/events/1"
+          }
+        },
+        {
+          "name": "Update Event",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": "{{base_url}}/api/events/1"
+          }
+        },
+        {
+          "name": "Delete Event",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{base_url}}/api/events/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Skills",
+      "item": [
+        {
+          "name": "Get Skills",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/skills"
+          }
+        },
+        {
+          "name": "Add Skill",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skill_name\": \"Teaching\",\n  \"description\": \"Helps in education\",\n  \"category\": \"Education\"\n}"
+            },
+            "url": "{{base_url}}/api/skills"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Registrations",
+      "item": [
+        {
+          "name": "Register Volunteer for Event",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_id\": 1,\n  \"volunteer_id\": 2,\n  \"status\": \"approved\"\n}"
+            },
+            "url": "{{base_url}}/api/registrations"
+          }
+        },
+        {
+          "name": "List All Registrations",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/registrations"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feedbacks",
+      "item": [
+        {
+          "name": "Submit Feedback",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"registration_id\": 1,\n  \"rating\": 5,\n  \"comment\": \"Amazing event!\"\n}"
+            },
+            "url": "{{base_url}}/api/feedbacks"
+          }
+        },
+        {
+          "name": "Get All Feedbacks",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/feedbacks"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    }
+  ]
+}
