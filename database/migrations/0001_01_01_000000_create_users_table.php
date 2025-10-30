@@ -12,9 +12,11 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->string('password_hash');
             $table->string('user_type')->default('volunteer'); // volunteer | organization | admin
+            $table->timestamp('email_verified_at')->nullable(); // For email verification
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('last_login')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->rememberToken(); // For "remember me" functionality
         });
     }
 

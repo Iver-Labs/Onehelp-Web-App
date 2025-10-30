@@ -1,87 +1,80 @@
 @extends('layouts.app')
 
+@section('title', 'Login - OneHelp')
+
 @section('content')
-<style>
-  .login-bg {
-    background: url('{{ asset('images/page-5-img-1.png') }}') no-repeat center center/cover;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .login-card {
-    background: rgba(30, 46, 61, 0.85);
-    border-radius: 16px;
-    padding: 2.5rem 3rem;
-    width: 100%;
-    max-width: 420px;
-    color: white;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-  }
-  .login-card h2 {
-    color: #F7D47E;
-    font-weight: 700;
-  }
-  .form-control {
-    background-color: #F7D47E;
-    border: none;
-    color: #1E2E3D;
-    font-weight: 500;
-  }
-  .form-control::placeholder {
-    color: #1E2E3D;
-    opacity: 0.7;
-  }
-  .btn-login {
-    background-color: #234C6A;
-    color: #fff;
-    font-weight: 600;
-    border: none;
-    transition: 0.2s;
-  }
-  .btn-login:hover {
-    background-color: #18374D;
-  }
-  a {
-    color: #F7D47E;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-</style>
+<div style="background: linear-gradient(135deg, #90C7D0 0%, #5FB9A8 100%); min-height: 100vh; padding: 4rem 0; display: flex; align-items: center;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-lg" style="border: 3px solid #1A4D5E; border-radius: 20px; overflow: hidden;">
+                    <div class="card-header text-center" style="background: #1A4D5E; color: white; padding: 2rem;">
+                        <h2 style="font-weight: 700; margin: 0;">Welcome Back</h2>
+                        <p style="margin: 0.5rem 0 0; opacity: 0.9;">Login to continue your journey</p>
+                    </div>
 
-<div class="login-bg">
-  <div class="login-card text-center">
-    <h2 class="mb-4">OneHelp</h2>
-    <h5 class="mb-4">Let’s Get You Connected</h5>
+                    <div class="card-body" style="padding: 2.5rem;">
+                        @if(session('success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
 
-    <form method="POST" action="{{ route('login') }}">
-      @csrf
-      <div class="mb-3 text-start">
-        <label for="email" class="form-label">Username or Email</label>
-        <input type="text" id="email" name="email" class="form-control" required>
-      </div>
+                        @if($errors->any())
+                            <div class="alert alert-danger" role="alert">
+                                @foreach($errors->all() as $error)
+                                    <div>{{ $error }}</div>
+                                @endforeach
+                            </div>
+                        @endif
 
-      <div class="mb-3 text-start">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" id="password" name="password" class="form-control" required>
-      </div>
+                        <form method="POST" action="{{ route('login.submit') }}">
+                            @csrf
 
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="form-check text-start">
-          <input class="form-check-input" type="checkbox" id="remember" name="remember">
-          <label class="form-check-label" for="remember">Remember me</label>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold" style="color: #1A4D5E;">Email Address</label>
+                                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required autofocus style="padding: 0.75rem; border: 2px solid #1A4D5E; border-radius: 10px;">
+                                @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold" style="color: #1A4D5E;">Password</label>
+                                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required style="padding: 0.75rem; border: 2px solid #1A4D5E; border-radius: 10px;">
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4 form-check">
+                                <input type="checkbox" class="form-check-input" id="remember" name="remember" style="border: 2px solid #1A4D5E;">
+                                <label class="form-check-label" for="remember" style="color: #1A4D5E;">
+                                    Remember me
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn w-100 mb-3" style="background: #F4D58D; color: #1A4D5E; font-weight: 700; padding: 1rem; border-radius: 10px; border: 2px solid #1A4D5E; font-size: 1.1rem;">
+                                Login
+                            </button>
+
+                            <div class="text-center">
+                                <a href="#" style="color: #2C7A6E; font-weight: 600; text-decoration: none;">Forgot your password?</a>
+                            </div>
+                        </form>
+
+                        <hr style="margin: 2rem 0; border-top: 2px solid #1A4D5E;">
+
+                        <div class="text-center">
+                            <p style="color: #1A4D5E; margin-bottom: 1rem;">Don't have an account yet?</p>
+                            <a href="{{ route('register') }}" class="btn w-100" style="background: white; color: #1A4D5E; font-weight: 700; padding: 1rem; border-radius: 10px; border: 2px solid #1A4D5E;">
+                                Create an Account
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <a href="#" class="small">Forgot Password?</a>
-      </div>
-
-      <button type="submit" class="btn btn-login w-100 mb-3">Log In</button>
-
-      <div class="text-center small">
-        Don’t have an account? <a href="{{ route('register') }}">Register</a>
-      </div>
-    </form>
-  </div>
+    </div>
 </div>
 @endsection
