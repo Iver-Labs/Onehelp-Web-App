@@ -1,9 +1,8 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="{{ route('home') }}">
-            {{-- If you have a logo, uncomment this: --}}
-            {{-- <img src="{{ asset('images/logo.png') }}" alt="OneHelp Logo" class="navbar-logo"> --}}
-            <span>OneHelp</span>
+             <img src="{{ asset('images/Onehelp-white-logo.svg') }}" alt="OneHelp Logo" class="navbar-logo">
+            <!-- <span>OneHelp</span> -->
         </a>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="background: white;">
