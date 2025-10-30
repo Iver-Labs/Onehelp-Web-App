@@ -1,100 +1,126 @@
 @extends('layouts.app')
 
+@section('title', 'Browse Events - OneHelp')
+
 @section('content')
-<style>
-  .events-hero {
-    background: url('{{ asset('images/page-8.png') }}') no-repeat center center/cover;
-    min-height: 50vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    position: relative;
-  }
-  .events-hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(30, 46, 61, 0.7);
-  }
-  .events-hero .content {
-    position: relative;
-    z-index: 1;
-  }
-  .event-card {
-    background-color: #EAF2F8;
-    border: none;
-    border-radius: 12px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .event-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-  }
-  .event-card img {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    height: 180px;
-    object-fit: cover;
-  }
-  .btn-join {
-    background-color: #F7D47E;
-    color: #1E2E3D;
-    font-weight: 600;
-    border: none;
-    transition: 0.2s;
-  }
-  .btn-join:hover {
-    background-color: #EACB69;
-  }
-</style>
-
-<!-- HERO SECTION -->
-<section class="events-hero">
-  <div class="content">
-    <h1 class="fw-bold display-5 mb-3">Volunteer Events</h1>
-    <p class="lead">Discover and join meaningful volunteer opportunities near you.</p>
-  </div>
+<!-- Events Hero -->
+<section class="hero-section" style="min-height: 400px;">
+    <div class="hero-content">
+        <h1>Volunteer Events</h1>
+        <p>Find opportunities to make a difference in your community</p>
+    </div>
 </section>
 
-<!-- EVENTS GRID -->
-<section class="py-5" style="background-color:#F7D47E;">
-  <div class="container">
-    <h2 class="fw-bold text-center mb-5">Upcoming Events</h2>
-
-    @if ($events->count() > 0)
-      <div class="row g-4">
-        @foreach ($events as $event)
-          <div class="col-md-3">
-            <div class="card event-card h-100 shadow-sm">
-              @if ($event->images && count($event->images))
-                <img src="{{ asset('storage/' . $event->images[0]->image_url) }}" alt="{{ $event->event_name }}">
-              @else
-                <img src="{{ asset('images/event-placeholder.jpg') }}" alt="{{ $event->event_name }}">
-              @endif
-              <div class="card-body text-start">
-                <h5 class="fw-bold">{{ $event->event_name }}</h5>
-                <p class="text-muted small mb-1">📍 {{ $event->location }}</p>
-                <p class="text-muted small mb-1">🗓 {{ \Carbon\Carbon::parse($event->event_date)->format('F d, Y') }}</p>
-                <p class="text-muted small">🕗 {{ $event->start_time }} - {{ $event->end_time }}</p>
-                <a href="/events/{{ $event->id }}" class="btn btn-join w-100 mt-2">Join This Event</a>
-              </div>
+<!-- Events Filters & Grid -->
+<section style="padding: 4rem 0; background: #f8f9fa;">
+    <div class="container">
+        <!-- Filter Bar -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center">
+                    <div class="d-flex gap-2 flex-wrap">
+                        <select class="form-select" style="width: auto;">
+                            <option>All Categories</option>
+                            <option>Environment</option>
+                            <option>Education</option>
+                            <option>Community</option>
+                            <option>Health</option>
+                        </select>
+                        <select class="form-select" style="width: auto;">
+                            <option>All Locations</option>
+                            <option>Manila</option>
+                            <option>Quezon City</option>
+                            <option>Makati</option>
+                            <option>Pasig</option>
+                        </select>
+                        <input type="date" class="form-control" style="width: auto;">
+                    </div>
+                    <div>
+                        <input type="search" class="form-control" placeholder="Search events...">
+                    </div>
+                </div>
             </div>
-          </div>
-        @endforeach
-      </div>
-    @else
-      <p class="text-center text-muted fs-5 mt-5">No events available at the moment. Please check back soon!</p>
-    @endif
-  </div>
-</section>
+        </div>
 
-<!-- COMMUNITY MESSAGE -->
-<section class="py-5" style="background-color:#234C6A; color:white;">
-  <div class="container text-center">
-    <h2 class="fw-bold mb-3">Together, We Make a Difference</h2>
-    <p class="mb-0">Every act of kindness counts — find your next opportunity to give back and be part of a growing movement for change.</p>
-  </div>
+        <!-- Events Grid -->
+        <div class="row g-4">
+            @for ($i = 1; $i <= 8; $i++)
+            <div class="col-md-6 col-lg-3">
+                <div class="event-card">
+                    <div class="event-image">
+                        <img src="https://via.placeholder.com/300x200/{{ $i % 2 == 0 ? '7DD3C0' : 'F4D58D' }}/1A4D5E?text=Event+{{ $i }}" alt="Event {{ $i }}">
+                    </div>
+                    <div class="event-content">
+                        <h3 class="event-title">Sample Event {{ $i }}</h3>
+                        <p class="event-org">Organization Name {{ $i }}</p>
+                        <p class="event-description">Join us for this amazing volunteer opportunity that will make a real difference in our community.</p>
+                        <div class="event-meta">
+                            <span><i class="far fa-calendar"></i> Dec {{ 10 + $i }}, 2024</span>
+                            <span><i class="far fa-clock"></i> {{ 8 + $i }}:00 AM</span>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">{{ $i % 2 == 0 ? 'Environment' : 'Community' }}</span>
+                            <span class="event-tag">{{ $i % 3 == 0 ? 'Indoor' : 'Outdoor' }}</span>
+                        </div>
+                        <a href="{{ url('/events/' . $i) }}" class="btn-view-details">View Details</a>
+                    </div>
+                </div>
+            </div>
+            @endfor
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-5 d-flex justify-content-center">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </section>
 @endsection
+
+@push('styles')
+<style>
+    .form-select, .form-control {
+        border: 2px solid var(--navy);
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+        font-weight: 600;
+    }
+
+    .form-select:focus, .form-control:focus {
+        border-color: var(--primary-teal);
+        box-shadow: 0 0 0 0.2rem rgba(125, 211, 192, 0.25);
+    }
+
+    .pagination .page-link {
+        color: var(--navy);
+        border: 2px solid var(--navy);
+        margin: 0 0.25rem;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--primary-teal);
+        border-color: var(--navy);
+        color: var(--navy);
+    }
+
+    .pagination .page-link:hover {
+        background-color: var(--accent-yellow);
+        border-color: var(--navy);
+        color: var(--navy);
+    }
+</style>
+@endpush

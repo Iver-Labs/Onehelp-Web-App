@@ -1,129 +1,150 @@
 @extends('layouts.app')
 
+@section('title', 'About Us - OneHelp')
+
 @section('content')
-<style>
-  .about-hero {
-    background: url('{{ asset('images/page-2.png') }}') no-repeat center center/cover;
-    min-height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    position: relative;
-  }
-
-  .about-hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(30, 46, 61, 0.7);
-  }
-
-  .about-hero .content {
-    position: relative;
-    z-index: 1;
-  }
-
-  .about-section {
-    background-color: #F5F7FA;
-    padding: 4rem 1rem;
-  }
-
-  .mission {
-    background-color: #234C6A;
-    color: white;
-    padding: 4rem 1rem;
-  }
-
-  .mission h2 {
-    color: #F7D47E;
-  }
-
-  .about-values {
-    background-color: #F7D47E;
-    color: #1E2E3D;
-    padding: 4rem 1rem;
-  }
-
-  .about-values h2 {
-    font-weight: 700;
-  }
-
-  .about-values .card {
-    border: none;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-  }
-</style>
-
-<!-- HERO -->
-<section class="about-hero">
-  <div class="content">
-    <h1 class="fw-bold display-5 mb-3">About OneHelp</h1>
-    <p class="lead">Connecting Hearts to Communities — Empowering people to create positive change, one act of kindness at a time.</p>
-  </div>
-</section>
-
-<!-- WHO WE ARE -->
-<section class="about-section text-center">
-  <div class="container">
-    <h2 class="fw-bold mb-4">Who We Are</h2>
-    <p class="mx-auto" style="max-width: 800px;">
-      OneHelp is a volunteer management platform built to connect passionate individuals with organizations that are making a difference.
-      Our mission is to simplify how people discover, join, and contribute to causes that matter most.
-      We believe that every act of service — big or small — helps strengthen the community we all share.
-    </p>
-  </div>
-</section>
-
-<!-- MISSION -->
-<section class="mission text-center">
-  <div class="container">
-    <h2 class="fw-bold mb-4">Our Mission</h2>
-    <p class="mx-auto" style="max-width: 750px;">
-      To empower volunteers and organizations through meaningful partnerships that drive sustainable development.
-      We aim to make volunteering more accessible, inclusive, and impactful for everyone.
-    </p>
-  </div>
-</section>
-
-<!-- OUR VALUES -->
-<section class="about-values text-center">
-  <div class="container">
-    <h2 class="fw-bold mb-5">Our Core Values</h2>
-    <div class="row g-4 justify-content-center">
-      <div class="col-md-4">
-        <div class="card p-4 h-100">
-          <h4 class="fw-bold mb-3">💛 Compassion</h4>
-          <p>We lead with empathy and kindness in every action we take.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-4 h-100">
-          <h4 class="fw-bold mb-3">🌍 Collaboration</h4>
-          <p>We build bridges between people and organizations to amplify impact.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-4 h-100">
-          <h4 class="fw-bold mb-3">🚀 Empowerment</h4>
-          <p>We empower individuals to take action and be part of meaningful change.</p>
-        </div>
-      </div>
+<!-- About Hero -->
+<section class="hero-section" style="min-height: 400px;">
+    <div class="hero-content">
+        <h1>About OneHelp</h1>
+        <p>Building Bridges Between Hearts and Communities</p>
     </div>
-  </div>
 </section>
 
-<!-- SUSTAINABLE FUTURE -->
-<section class="py-5" style="background-color:#EAF2F8;">
-  <div class="container text-center">
-    <h2 class="fw-bold mb-4">Building a Sustainable Future Together</h2>
-    <p class="mx-auto mb-4" style="max-width:800px;">
-      OneHelp aligns with the United Nations Sustainable Development Goals, promoting equality, education, zero hunger, and stronger communities.
-    </p>
-    <img src="{{ asset('images/page-13-img-1.png') }}" alt="SDG Goals" class="img-fluid" style="max-width:400px;">
-  </div>
+<!-- Mission & Vision -->
+<section style="padding: 5rem 0; background: white;">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-md-6">
+                <div class="p-4" style="background: var(--primary-teal); border-radius: 20px; border: 3px solid var(--navy); height: 100%;">
+                    <h2 style="color: var(--navy); font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem;">Our Mission</h2>
+                    <p style="color: var(--navy); font-size: 1.1rem; line-height: 1.8;">
+                        To empower communities by connecting passionate volunteers with meaningful opportunities, 
+                        fostering a culture of service, compassion, and sustainable development across the Philippines.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-4" style="background: var(--accent-yellow); border-radius: 20px; border: 3px solid var(--navy); height: 100%;">
+                    <h2 style="color: var(--navy); font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem;">Our Vision</h2>
+                    <p style="color: var(--navy); font-size: 1.1rem; line-height: 1.8;">
+                        A Philippines where every individual actively contributes to building stronger, more resilient 
+                        communities through volunteerism, creating lasting positive change for generations to come.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Story -->
+<section style="padding: 5rem 0; background: var(--primary-teal);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <img src="https://via.placeholder.com/600x400/7DD3C0/1A4D5E?text=Our+Story" alt="Our Story" style="width: 100%; border-radius: 20px; border: 3px solid var(--navy);">
+            </div>
+            <div class="col-md-6">
+                <h2 style="color: var(--navy); font-size: 2.5rem; font-weight: 700; margin-bottom: 2rem;">Our Story</h2>
+                <p style="color: var(--navy); font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                    OneHelp was born from a simple idea: that every person has something valuable to contribute to their community. 
+                    Founded in 2024, we recognized the gap between passionate volunteers and organizations in need of support.
+                </p>
+                <p style="color: var(--navy); font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                    Our platform leverages technology to make volunteering accessible, meaningful, and impactful. We've connected 
+                    thousands of volunteers with hundreds of organizations, creating a ripple effect of positive change across the Philippines.
+                </p>
+                <p style="color: var(--navy); font-size: 1.1rem; line-height: 1.8;">
+                    Today, we're proud to be the leading volunteer management platform in the country, but our journey is just beginning.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Values -->
+<section style="padding: 5rem 0; background: white;">
+    <div class="container">
+        <h2 class="text-center mb-5" style="color: var(--navy); font-size: 2.5rem; font-weight: 700;">Our Core Values</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center p-4" style="background: var(--primary-teal); border-radius: 20px; border: 3px solid var(--navy); height: 100%;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🤝</div>
+                    <h3 style="color: var(--navy); font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Community</h3>
+                    <p style="color: var(--navy);">Building strong connections and fostering a sense of belonging among volunteers and organizations.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4" style="background: var(--accent-yellow); border-radius: 20px; border: 3px solid var(--navy); height: 100%;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">💡</div>
+                    <h3 style="color: var(--navy); font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Innovation</h3>
+                    <p style="color: var(--navy);">Leveraging technology to create efficient, user-friendly solutions for modern volunteerism.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4" style="background: var(--primary-teal); border-radius: 20px; border: 3px solid var(--navy); height: 100%;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🌱</div>
+                    <h3 style="color: var(--navy); font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Impact</h3>
+                    <p style="color: var(--navy);">Measuring and maximizing the positive change we create in communities across the nation.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4" style="background: var(--accent-yellow); border-radius: 20px; border: 3px solid var(--navy); height: 100%;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎯</div>
+                    <h3 style="color: var(--navy); font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Integrity</h3>
+                    <p style="color: var(--navy);">Operating with transparency, honesty, and accountability in everything we do.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4" style="background: var(--primary-teal); border-radius: 20px; border: 3px solid var(--navy); height: 100%;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🌍</div>
+                    <h3 style="color: var(--navy); font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Sustainability</h3>
+                    <p style="color: var(--navy);">Aligning our efforts with the UN SDGs to create long-term, sustainable solutions.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center p-4" style="background: var(--accent-yellow); border-radius: 20px; border: 3px solid var(--navy); height: 100%;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">❤️</div>
+                    <h3 style="color: var(--navy); font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Compassion</h3>
+                    <p style="color: var(--navy);">Leading with empathy and understanding in every interaction and initiative.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section (Optional) -->
+<section style="padding: 5rem 0; background: var(--accent-yellow);">
+    <div class="container">
+        <h2 class="text-center mb-5" style="color: var(--navy); font-size: 2.5rem; font-weight: 700;">Meet Our Team</h2>
+        <div class="row g-4">
+            @for ($i = 1; $i <= 4; $i++)
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div style="width: 150px; height: 150px; margin: 0 auto 1rem; border-radius: 50%; border: 3px solid var(--navy); overflow: hidden;">
+                        <img src="https://via.placeholder.com/150/7DD3C0/1A4D5E?text=Team+{{ $i }}" alt="Team Member {{ $i }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h4 style="color: var(--navy); font-weight: 700; margin-bottom: 0.5rem;">Team Member {{ $i }}</h4>
+                    <p style="color: var(--navy); font-weight: 600;">Position Title</p>
+                </div>
+            </div>
+            @endfor
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section style="padding: 5rem 0; background: var(--primary-teal);">
+    <div class="container text-center">
+        <h2 style="color: var(--navy); font-size: 2.5rem; font-weight: 700; margin-bottom: 2rem;">Join Our Community</h2>
+        <p style="color: var(--navy); font-size: 1.2rem; margin-bottom: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+            Whether you're a volunteer looking to make a difference or an organization seeking support, 
+            we're here to help you create positive change.
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{{ url('/register') }}" class="btn btn-browse-events" style="display: inline-block;">Sign Up Now</a>
+            <a href="{{ url('/events') }}" class="btn" style="background: white; color: var(--navy); padding: 1rem 3rem; border-radius: 50px; border: 3px solid var(--navy); font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; display: inline-block;">Browse Events</a>
+        </div>
+    </div>
 </section>
 @endsection
