@@ -11,8 +11,16 @@ class Volunteer extends Model
 
     protected $primaryKey = 'volunteer_id';
     protected $fillable = [
-        'user_id', 'first_name', 'last_name', 'phone', 'address',
-        'date_of_birth', 'bio', 'profile_image', 'total_hours', 'events_completed'
+    'user_id', 'first_name', 'last_name', 
+    'age',              // NEW
+    'phone',            // NEW
+    'address',
+    'date_of_birth', 'bio', 'profile_image', 
+    'skills',           // NEW
+    'interests',        // NEW
+    'location',         // NEW
+    'availability',     // NEW
+    'total_hours', 'events_completed'
     ];
 
     public function user() {

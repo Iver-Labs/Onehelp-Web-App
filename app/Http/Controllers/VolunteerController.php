@@ -6,6 +6,8 @@ use App\Models\Volunteer;
 use App\Models\EventRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class VolunteerController extends Controller
@@ -154,7 +156,71 @@ class VolunteerController extends Controller
             return redirect()->route('home')->with('error', 'Volunteer profile not found.');
         }
         
-        return view('volunteer.profile', compact('volunteer'));
+        // Get stats for the profile page
+        $stats = $this->getVolunteerStats($volunteer->volunteer_id);
+        
+        return view('volunteer.profile', compact('volunteer', 'stats'));
+    }
+    
+    /**
+     * Update volunteer personal information
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        $volunteer = Volunteer::where('user_id', $user->user_id)->first();
+        
+        if (!$volunteer) {
+            return redirect()->back()->with('error', 'Volunteer profile not found.');
+        }
+        
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:100',
+            'age' => 'nullable|integer|min:1|max:120',
+            'date_of_birth' => 'nullable|date',
+            'phone' => 'nullable|string|max:20',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        
+        // Handle profile image upload
+        if ($request->hasFile('profile_image')) {
+            // Delete old image if exists
+            if ($volunteer->profile_image && \Storage::disk('public')->exists($volunteer->profile_image)) {
+                \Storage::disk('public')->delete($volunteer->profile_image);
+            }
+            
+            // Store new image
+            $path = $request->file('profile_image')->store('profiles', 'public');
+            $validated['profile_image'] = $path;
+        }
+        
+        $volunteer->update($validated);
+        
+        return redirect()->route('volunteer.profile')->with('success', 'Personal information updated successfully!');
+    }
+    
+    /**
+     * Update volunteer information (skills, interests, etc.)
+     */
+    public function updateInfo(Request $request)
+    {
+        $user = Auth::user();
+        $volunteer = Volunteer::where('user_id', $user->user_id)->first();
+        
+        if (!$volunteer) {
+            return redirect()->back()->with('error', 'Volunteer profile not found.');
+        }
+        
+        $validated = $request->validate([
+            'skills' => 'nullable|string|max:500',
+            'interests' => 'nullable|string|max:500',
+            'location' => 'nullable|string|max:255',
+            'availability' => 'nullable|string|max:255'
+        ]);
+        
+        $volunteer->update($validated);
+        
+        return redirect()->route('volunteer.profile')->with('success', 'Volunteer information updated successfully!');
     }
     
     /**
@@ -163,8 +229,83 @@ class VolunteerController extends Controller
     public function account()
     {
         $user = Auth::user();
+        $volunteer = Volunteer::where('user_id', $user->user_id)->first();
         
-        return view('volunteer.account', compact('user'));
+        // Get stats for the account page
+        $stats = $this->getVolunteerStats($volunteer->volunteer_id ?? 0);
+        
+        return view('volunteer.account', compact('user', 'stats'));
+    }
+    
+    /**
+     * Update user password
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+        
+        $user = Auth::user();
+        
+        // Check if current password is correct
+        if (!\Hash::check($request->current_password, $user->password_hash)) {
+            return redirect()->back()->with('error', 'Current password is incorrect.');
+        }
+        
+        // Update password
+        $user->password_hash = \Hash::make($request->new_password);
+        $user->save();
+        
+        return redirect()->route('volunteer.account')->with('success', 'Password updated successfully!');
+    }
+    
+    /**
+     * Deactivate user account
+     */
+    public function deactivateAccount(Request $request)
+    {
+        $request->validate([
+            'password' => 'required'
+        ]);
+        
+        $user = Auth::user();
+        
+        // Verify password
+        if (!\Hash::check($request->password, $user->password_hash)) {
+            return redirect()->back()->with('error', 'Password is incorrect.');
+        }
+        
+        // Soft delete and deactivate
+        $user->is_active = false;
+        $user->save();
+        $user->delete(); // Soft delete if using SoftDeletes trait
+        
+        // Logout the user
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        return redirect()->route('home')->with('success', 'Your account has been deactivated.');
+    }
+    
+    /**
+     * Get volunteer stats
+     */
+    private function getVolunteerStats($volunteerId)
+    {
+        $approvedRegistrations = EventRegistration::where('volunteer_id', $volunteerId)
+            ->where('status', 'approved')
+            ->with('event')
+            ->get();
+        
+        return [
+            'totalEvents' => $approvedRegistrations->count(),
+            'completedEvents' => $approvedRegistrations->filter(function ($reg) {
+                return Carbon::parse($reg->event->event_date)->isPast();
+            })->count()
+        ];
     }
     
     /**

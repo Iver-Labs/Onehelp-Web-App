@@ -53,8 +53,17 @@ Route::post('/register/organization', [RegisterController::class, 'registerOrgan
     Route::prefix('volunteer')->name('volunteer.')->group(function () {
         Route::get('/dashboard', [VolunteerController::class, 'dashboard'])->name('dashboard');
         Route::get('/events', [VolunteerController::class, 'events'])->name('events');
+        
+        // Profile routes
         Route::get('/profile', [VolunteerController::class, 'profile'])->name('profile');
+        Route::put('/profile/update', [VolunteerController::class, 'updateProfile'])->name('profile.update');
+        Route::put('/profile/info', [VolunteerController::class, 'updateInfo'])->name('info.update');
+        
+        // Account routes
         Route::get('/account', [VolunteerController::class, 'account'])->name('account');
+        Route::put('/account/password', [VolunteerController::class, 'updatePassword'])->name('password.update');
+        Route::delete('/account/deactivate', [VolunteerController::class, 'deactivateAccount'])->name('account.deactivate');
+        
         Route::get('/messages', [VolunteerController::class, 'messages'])->name('messages');
     });
 
