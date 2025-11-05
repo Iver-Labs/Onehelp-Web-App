@@ -5,6 +5,7 @@ use App\Http\Controllers\Frontend\EventPageController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\VolunteerController;
 
 // ===============================
 // FRONTEND ROUTES
@@ -46,6 +47,30 @@ Route::post('/register/organization', [RegisterController::class, 'registerOrgan
     ->name('register.organization')
     ->middleware('guest');
 
+    Route::middleware(['auth'])->group(function () {
+    
+    // Volunteer Routes
+    Route::prefix('volunteer')->name('volunteer.')->group(function () {
+        Route::get('/dashboard', [VolunteerController::class, 'dashboard'])->name('dashboard');
+        Route::get('/events', [VolunteerController::class, 'events'])->name('events');
+        Route::get('/profile', [VolunteerController::class, 'profile'])->name('profile');
+        Route::get('/account', [VolunteerController::class, 'account'])->name('account');
+        Route::get('/messages', [VolunteerController::class, 'messages'])->name('messages');
+    });
+
+    // Organization Dashboard (placeholder for now)
+    Route::get('/organization/dashboard', function () {
+        return view('organization.dashboard');
+    })->name('organization.dashboard');
+
+    // Admin Dashboard (placeholder for now)
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+});
+
+    
+
 // ===============================
 // EVENTS PAGES
 // ===============================
@@ -56,10 +81,6 @@ Route::get('/events/{id}', [EventPageController::class, 'show'])->name('events.s
 // PROTECTED ROUTES (Require Authentication)
 // ===============================
 Route::middleware(['auth'])->group(function () {
-    // Volunteer Dashboard (placeholder for now)
-    Route::get('/volunteer/dashboard', function () {
-        return view('volunteer.dashboard');
-    })->name('volunteer.dashboard');
 
     // Organization Dashboard (placeholder for now)
     Route::get('/organization/dashboard', function () {
