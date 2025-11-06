@@ -183,8 +183,38 @@ class DatabaseSeeder extends Seeder
 
     private function seedEvents()
     {
-        // Call EventsTableSeeder to seed events with detailed descriptions
-        $this->call(EventsTableSeeder::class);
+        $events = [
+            ['name' => 'Tree Planting at La Mesa', 'org_id' => 1, 'category' => 'Environment', 'date' => Carbon::now()->subDays(15), 'location' => 'La Mesa Eco Park, QC', 'max' => 30],
+            ['name' => 'Urban Restoration and Eco-Awareness Drive', 'org_id' => 1, 'category' => 'Environment', 'date' => Carbon::now()->subDays(10), 'location' => 'Quezon City', 'max' => 50],
+            ['name' => 'Weekend Literacy Program', 'org_id' => 2, 'category' => 'Education', 'date' => Carbon::now()->subDays(8), 'location' => 'Manila Central Library', 'max' => 20],
+            ['name' => 'Organic Farming Workshop', 'org_id' => 1, 'category' => 'Environment', 'date' => Carbon::now()->subDays(5), 'location' => 'Antipolo Farm', 'max' => 25],
+            ['name' => 'Photography Exhibition Event', 'org_id' => 5, 'category' => 'Arts', 'date' => Carbon::now()->addDays(5), 'location' => 'National Museum', 'max' => 40],
+            ['name' => 'Community Food Drive', 'org_id' => 3, 'category' => 'Community', 'date' => Carbon::now()->addDays(10), 'location' => 'Makati Community Center', 'max' => 35],
+            ['name' => 'Free Medical Mission', 'org_id' => 4, 'category' => 'Health', 'date' => Carbon::now()->addDays(15), 'location' => 'Pasig Sports Complex', 'max' => 60],
+            ['name' => 'Youth Leadership Camp', 'org_id' => 6, 'category' => 'Education', 'date' => Carbon::now()->addDays(20), 'location' => 'Tagaytay Highlands', 'max' => 45],
+            ['name' => 'Animal Shelter Volunteering', 'org_id' => 7, 'category' => 'Animal Welfare', 'date' => Carbon::now()->addDays(7), 'location' => 'PAWS Animal Shelter', 'max' => 15],
+            ['name' => 'Beach Cleanup Campaign', 'org_id' => 1, 'category' => 'Environment', 'date' => Carbon::now()->addDays(12), 'location' => 'Manila Bay', 'max' => 80],
+        ];
+
+        foreach ($events as $event) {
+            DB::table('events')->insert([
+                'organization_id' => $event['org_id'],
+                'event_name' => $event['name'],
+                'description' => 'Join us for ' . strtolower($event['name']) . '. This is a great opportunity to give back to the community and make a difference.',
+                'category' => $event['category'],
+                'event_date' => $event['date']->format('Y-m-d'),
+                'start_time' => '08:00:00',
+                'end_time' => '17:00:00',
+                'location' => $event['location'],
+                'max_volunteers' => $event['max'],
+                'registered_count' => rand(5, $event['max'] - 5),
+                'status' => 'open',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        $this->command->info('✓ Events seeded');
     }
 
     private function seedEventRegistrations()
