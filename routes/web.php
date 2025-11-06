@@ -77,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
         
         // Messages
         Route::get('/messages', [VolunteerController::class, 'messages'])->name('messages');
+        Route::post('/messages/send', [VolunteerController::class, 'sendMessage'])->name('messages.send');
     });
 
     // ===============================
