@@ -6,6 +6,7 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\VolunteerController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\MessagesController;
 
 // ===============================
@@ -17,6 +18,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Static Pages
 Route::view('/about', 'pages.about')->name('about');
+
+// Events Pages
+Route::get('/events', [EventPageController::class, 'index'])->name('events');
+Route::get('/events/{id}', [EventPageController::class, 'show'])->name('events.show');
 
 // ===============================
 // AUTHENTICATION ROUTES
@@ -48,12 +53,14 @@ Route::post('/register/organization', [RegisterController::class, 'registerOrgan
     ->name('register.organization')
     ->middleware('guest');
 
-   // ===============================
+// ===============================
 // PROTECTED ROUTES (Require Authentication)
 // ===============================
 Route::middleware(['auth'])->group(function () {
     
-    // Volunteer Routes
+    // ===============================
+    // VOLUNTEER ROUTES
+    // ===============================
     Route::prefix('volunteer')->name('volunteer.')->group(function () {
         Route::get('/dashboard', [VolunteerController::class, 'dashboard'])->name('dashboard');
         Route::get('/events', [VolunteerController::class, 'events'])->name('events');
@@ -68,41 +75,33 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/account/password', [VolunteerController::class, 'updatePassword'])->name('password.update');
         Route::delete('/account/deactivate', [VolunteerController::class, 'deactivateAccount'])->name('account.deactivate');
         
+        // Messages
         Route::get('/messages', [VolunteerController::class, 'messages'])->name('messages');
     });
 
-    // Organization Dashboard (placeholder for now)
-    Route::get('/organization/dashboard', function () {
-        return view('organization.dashboard');
-    })->name('organization.dashboard');
+    // ===============================
+    // ORGANIZATION ROUTES
+    // ===============================
+    Route::prefix('organization')->name('organization.')->group(function () {
+        Route::get('/dashboard', [OrganizationController::class, 'dashboard'])->name('dashboard');
+        Route::get('/applications', [OrganizationController::class, 'applications'])->name('applications');
+        Route::put('/applications/{id}', [OrganizationController::class, 'updateApplicationStatus'])->name('applications.update');
+        Route::get('/analytics', [OrganizationController::class, 'analytics'])->name('analytics');
+        Route::get('/messages', [OrganizationController::class, 'messages'])->name('messages');
+        Route::post('/messages/send', [OrganizationController::class, 'sendMessage'])->name('messages.send');
+        
+        // Event routes (placeholder for now)
+        Route::get('/events/create', function() {
+            return view('organization.create-event');
+        })->name('events.create');
+    });
 
-    // Admin Dashboard (placeholder for now)
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-});
-
-
-    
-
-// ===============================
-// EVENTS PAGES
-// ===============================
-Route::get('/events', [EventPageController::class, 'index'])->name('events');
-Route::get('/events/{id}', [EventPageController::class, 'show'])->name('events.show');
-
-// ===============================
-// PROTECTED ROUTES (Require Authentication)
-// ===============================
-Route::middleware(['auth'])->group(function () {
-
-    // Organization Dashboard (placeholder for now)
-    Route::get('/organization/dashboard', function () {
-        return view('organization.dashboard');
-    })->name('organization.dashboard');
-
-    // Admin Dashboard (placeholder for now)
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    // ===============================
+    // ADMIN ROUTES (Placeholder)
+    // ===============================
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+    });
 });

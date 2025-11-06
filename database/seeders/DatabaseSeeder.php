@@ -147,13 +147,13 @@ class DatabaseSeeder extends Seeder
     private function seedOrganizations()
     {
         $organizations = [
-            ['org_name' => 'Green Earth Foundation', 'org_type' => 'NGO', 'contact_person' => 'Lea Santos', 'description' => 'Environmental conservation and sustainability'],
-            ['org_name' => 'Literacy For All', 'org_type' => 'Non-Profit', 'contact_person' => 'Mark Johnson', 'description' => 'Promoting education and literacy programs'],
-            ['org_name' => 'Community Food Bank', 'org_type' => 'Charity', 'contact_person' => 'Sarah Williams', 'description' => 'Fighting hunger in local communities'],
-            ['org_name' => 'Health First Clinic', 'org_type' => 'Medical', 'contact_person' => 'Dr. Robert Chen', 'description' => 'Providing free healthcare services'],
-            ['org_name' => 'Art for Everyone', 'org_type' => 'Cultural', 'contact_person' => 'Elena Rodriguez', 'description' => 'Making arts accessible to all'],
-            ['org_name' => 'Youth Empowerment Inc', 'org_type' => 'Non-Profit', 'contact_person' => 'James Brown', 'description' => 'Mentoring and supporting young people'],
-            ['org_name' => 'Animal Rescue League', 'org_type' => 'Animal Welfare', 'contact_person' => 'Lisa Anderson', 'description' => 'Rescuing and caring for animals'],
+            ['org_name' => 'Green Earth Foundation', 'org_type' => 'NGO', 'contact_person' => 'Lea Santos', 'description' => 'Environmental conservation and sustainability', 'founded_year' => 2015, 'rating' => 4.8],
+            ['org_name' => 'Literacy For All', 'org_type' => 'Non-Profit', 'contact_person' => 'Mark Johnson', 'description' => 'Promoting education and literacy programs', 'founded_year' => 2018, 'rating' => 4.5],
+            ['org_name' => 'Community Food Bank', 'org_type' => 'Charity', 'contact_person' => 'Sarah Williams', 'description' => 'Fighting hunger in local communities', 'founded_year' => 2020, 'rating' => 4.7],
+            ['org_name' => 'Health First Clinic', 'org_type' => 'Medical', 'contact_person' => 'Dr. Robert Chen', 'description' => 'Providing free healthcare services', 'founded_year' => 2016, 'rating' => 4.9],
+            ['org_name' => 'Art for Everyone', 'org_type' => 'Cultural', 'contact_person' => 'Elena Rodriguez', 'description' => 'Making arts accessible to all', 'founded_year' => 2019, 'rating' => 4.6],
+            ['org_name' => 'Youth Empowerment Inc', 'org_type' => 'Non-Profit', 'contact_person' => 'James Brown', 'description' => 'Mentoring and supporting young people', 'founded_year' => 2017, 'rating' => 4.4],
+            ['org_name' => 'Animal Rescue League', 'org_type' => 'Animal Welfare', 'contact_person' => 'Lisa Anderson', 'description' => 'Rescuing and caring for animals', 'founded_year' => 2021, 'rating' => 4.8],
         ];
 
         for ($i = 0; $i < count($organizations); $i++) {
@@ -164,11 +164,13 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $userId,
                 'org_name' => $org['org_name'],
                 'org_type' => $org['org_type'],
+                'founded_year' => $org['founded_year'],
                 'registration_number' => 'REG-' . str_pad($i + 1, 6, '0', STR_PAD_LEFT),
                 'contact_person' => $org['contact_person'],
                 'phone' => '028' . rand(1000000, 9999999),
-                'address' => 'Metro Manila, Philippines',
+                'address' => 'Quezon City, Metro Manila',
                 'description' => $org['description'],
+                'rating' => $org['rating'],
                 'is_verified' => true,
                 'verified_at' => now(),
                 'created_at' => now(),
@@ -217,40 +219,48 @@ class DatabaseSeeder extends Seeder
 
     private function seedEventRegistrations()
     {
-        $statuses = ['pending', 'approved', 'approved', 'approved', 'rejected']; // More approved for realistic data
-
         // Register volunteers for multiple events
         $registrations = [
             // Volunteer 1 - John
-            ['volunteer_id' => 1, 'event_id' => 1, 'status' => 'approved', 'hours' => 2],
-            ['volunteer_id' => 1, 'event_id' => 2, 'status' => 'approved', 'hours' => 3],
-            ['volunteer_id' => 1, 'event_id' => 3, 'status' => 'approved', 'hours' => 4],
-            ['volunteer_id' => 1, 'event_id' => 4, 'status' => 'pending', 'hours' => null],
-            ['volunteer_id' => 1, 'event_id' => 5, 'status' => 'approved', 'hours' => null],
+            ['volunteer_id' => 1, 'event_id' => 1, 'status' => 'approved', 'hours_contributed' => 2],
+            ['volunteer_id' => 1, 'event_id' => 2, 'status' => 'approved', 'hours_contributed' => 3],
+            ['volunteer_id' => 1, 'event_id' => 3, 'status' => 'approved', 'hours_contributed' => 4],
+            ['volunteer_id' => 1, 'event_id' => 4, 'status' => 'pending', 'hours_contributed' => 0],
+            ['volunteer_id' => 1, 'event_id' => 5, 'status' => 'approved', 'hours_contributed' => 0],
             
             // Volunteer 2 - Jane
-            ['volunteer_id' => 2, 'event_id' => 1, 'status' => 'approved', 'hours' => 2],
-            ['volunteer_id' => 2, 'event_id' => 6, 'status' => 'approved', 'hours' => 5],
-            ['volunteer_id' => 2, 'event_id' => 7, 'status' => 'pending', 'hours' => null],
+            ['volunteer_id' => 2, 'event_id' => 1, 'status' => 'approved', 'hours_contributed' => 2],
+            ['volunteer_id' => 2, 'event_id' => 6, 'status' => 'approved', 'hours_contributed' => 5],
+            ['volunteer_id' => 2, 'event_id' => 7, 'status' => 'pending', 'hours_contributed' => 0],
+            ['volunteer_id' => 2, 'event_id' => 5, 'status' => 'pending', 'hours_contributed' => 0],
             
             // Volunteer 3 - Maria
-            ['volunteer_id' => 3, 'event_id' => 2, 'status' => 'approved', 'hours' => 3],
-            ['volunteer_id' => 3, 'event_id' => 4, 'status' => 'approved', 'hours' => 6],
-            ['volunteer_id' => 3, 'event_id' => 5, 'status' => 'approved', 'hours' => null],
-            ['volunteer_id' => 3, 'event_id' => 10, 'status' => 'pending', 'hours' => null],
+            ['volunteer_id' => 3, 'event_id' => 2, 'status' => 'approved', 'hours_contributed' => 3],
+            ['volunteer_id' => 3, 'event_id' => 4, 'status' => 'approved', 'hours_contributed' => 6],
+            ['volunteer_id' => 3, 'event_id' => 5, 'status' => 'approved', 'hours_contributed' => 0],
+            ['volunteer_id' => 3, 'event_id' => 10, 'status' => 'pending', 'hours_contributed' => 0],
+            ['volunteer_id' => 3, 'event_id' => 6, 'status' => 'pending', 'hours_contributed' => 0],
             
             // Volunteer 4 - Carlos
-            ['volunteer_id' => 4, 'event_id' => 3, 'status' => 'approved', 'hours' => 4],
-            ['volunteer_id' => 4, 'event_id' => 8, 'status' => 'approved', 'hours' => null],
-            ['volunteer_id' => 4, 'event_id' => 9, 'status' => 'rejected', 'hours' => null],
+            ['volunteer_id' => 4, 'event_id' => 3, 'status' => 'approved', 'hours_contributed' => 4],
+            ['volunteer_id' => 4, 'event_id' => 8, 'status' => 'approved', 'hours_contributed' => 0],
+            ['volunteer_id' => 4, 'event_id' => 9, 'status' => 'rejected', 'hours_contributed' => 0],
+            ['volunteer_id' => 4, 'event_id' => 7, 'status' => 'pending', 'hours_contributed' => 0],
             
-            // More volunteers
-            ['volunteer_id' => 5, 'event_id' => 2, 'status' => 'approved', 'hours' => 3],
-            ['volunteer_id' => 5, 'event_id' => 7, 'status' => 'approved', 'hours' => null],
-            ['volunteer_id' => 6, 'event_id' => 5, 'status' => 'approved', 'hours' => null],
-            ['volunteer_id' => 6, 'event_id' => 6, 'status' => 'pending', 'hours' => null],
-            ['volunteer_id' => 7, 'event_id' => 3, 'status' => 'approved', 'hours' => 4],
-            ['volunteer_id' => 8, 'event_id' => 9, 'status' => 'approved', 'hours' => null],
+            // More volunteers with more pending applications
+            ['volunteer_id' => 5, 'event_id' => 2, 'status' => 'approved', 'hours_contributed' => 3],
+            ['volunteer_id' => 5, 'event_id' => 7, 'status' => 'approved', 'hours_contributed' => 0],
+            ['volunteer_id' => 5, 'event_id' => 10, 'status' => 'pending', 'hours_contributed' => 0],
+            
+            ['volunteer_id' => 6, 'event_id' => 5, 'status' => 'approved', 'hours_contributed' => 0],
+            ['volunteer_id' => 6, 'event_id' => 6, 'status' => 'pending', 'hours_contributed' => 0],
+            ['volunteer_id' => 6, 'event_id' => 8, 'status' => 'pending', 'hours_contributed' => 0],
+            
+            ['volunteer_id' => 7, 'event_id' => 3, 'status' => 'approved', 'hours_contributed' => 4],
+            ['volunteer_id' => 7, 'event_id' => 9, 'status' => 'pending', 'hours_contributed' => 0],
+            
+            ['volunteer_id' => 8, 'event_id' => 9, 'status' => 'approved', 'hours_contributed' => 0],
+            ['volunteer_id' => 8, 'event_id' => 1, 'status' => 'pending', 'hours_contributed' => 0],
         ];
 
         foreach ($registrations as $reg) {
@@ -260,11 +270,11 @@ class DatabaseSeeder extends Seeder
                 'volunteer_id' => $reg['volunteer_id'],
                 'event_id' => $reg['event_id'],
                 'status' => $reg['status'],
-                'hours_contributed' => $reg['hours'],
+                'hours_contributed' => $reg['hours_contributed'],
                 'certificate_issued' => $isPastEvent && $reg['status'] === 'approved',
                 'registered_at' => now()->subDays(rand(1, 30)),
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => now()->subDays(rand(1, 30)),
+                'updated_at' => now()->subDays(rand(0, 5)),
             ]);
         }
 
