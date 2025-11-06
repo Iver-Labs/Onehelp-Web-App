@@ -425,11 +425,16 @@ class OrganizationController extends Controller
             'category' => 'nullable|string|max:100',
             'event_date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
+            'end_time' => 'required|date_format:H:i',
             'location' => 'required|string|max:255',
             'max_volunteers' => 'required|integer|min:1',
             'status' => 'nullable|string|in:open,closed,cancelled'
         ]);
+
+        // Additional validation: end_time must be after start_time
+        if (strtotime($validated['end_time']) <= strtotime($validated['start_time'])) {
+            return back()->withErrors(['end_time' => 'The end time must be after the start time.'])->withInput();
+        }
 
         // Create the event
         $event = Event::create([
