@@ -3,6 +3,16 @@
 @section('title', 'Organization Dashboard - OneHelp')
 
 @section('content')
+<!-- Success Message -->
+@if(session('success'))
+<div style="background: #D1FAE5; border-left: 4px solid #10B981; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+    <svg style="width: 18px; height: 18px; color: #10B981; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    <p style="font-size: 13px; color: #065F46; margin: 0;">{{ session('success') }}</p>
+</div>
+@endif
+
 <!-- Welcome Section -->
 <div class="welcome-section">
     <div class="welcome-header">

@@ -15,6 +15,20 @@ use App\Models\User;
 class OrganizationController extends Controller
 {
     /**
+     * Get pending applications count for the organization and share with views
+     */
+    private function sharePendingCount($organizationId)
+    {
+        $pendingCount = EventRegistration::whereHas('event', function($query) use ($organizationId) {
+            $query->where('organization_id', $organizationId);
+        })->where('status', 'pending')->count();
+        
+        view()->share('pendingCount', $pendingCount);
+        
+        return $pendingCount;
+    }
+
+    /**
      * Display the organization dashboard
      */
     public function dashboard()
@@ -44,12 +58,7 @@ class OrganizationController extends Controller
         $monthlyImpact = $this->getMonthlyImpact($organization->organization_id);
         
         // Get pending applications count
-        $pendingCount = EventRegistration::whereHas('event', function($query) use ($organization) {
-            $query->where('organization_id', $organization->organization_id);
-        })->where('status', 'pending')->count();
-        
-        // Share pending count with sidebar
-        view()->share('pendingCount', $pendingCount);
+        $pendingCount = $this->sharePendingCount($organization->organization_id);
         
         return view('organization.dashboard', compact(
             'organization',
@@ -236,8 +245,7 @@ class OrganizationController extends Controller
         ->get();
         
         // Get pending count
-        $pendingCount = $applications->where('status', 'pending')->count();
-        view()->share('pendingCount', $pendingCount);
+        $this->sharePendingCount($organization->organization_id);
         
         return view('organization.applications', compact('applications', 'organization'));
     }
@@ -271,11 +279,7 @@ class OrganizationController extends Controller
             return redirect()->route('home')->with('error', 'Organization profile not found.');
         }
         
-        $pendingCount = EventRegistration::whereHas('event', function($query) use ($organization) {
-            $query->where('organization_id', $organization->organization_id);
-        })->where('status', 'pending')->count();
-        
-        view()->share('pendingCount', $pendingCount);
+        $this->sharePendingCount($organization->organization_id);
         
         return view('organization.analytics', compact('organization'));
     }
@@ -383,5 +387,71 @@ class OrganizationController extends Controller
         view()->share('pendingCount', $pendingCount);
 
         return view('organization.messages', compact('organization', 'conversations', 'selectedUser', 'messages'));
+    }
+
+    /**
+     * Show the form for creating a new event
+     */
+    public function createEvent()
+    {
+        $user = Auth::user();
+        $organization = Organization::where('user_id', $user->user_id)->first();
+
+        if (!$organization) {
+            return redirect()->route('home')->with('error', 'Organization profile not found.');
+        }
+
+        $this->sharePendingCount($organization->organization_id);
+
+        return view('organization.create-event', compact('organization'));
+    }
+
+    /**
+     * Store a newly created event
+     */
+    public function storeEvent(Request $request)
+    {
+        $user = Auth::user();
+        $organization = Organization::where('user_id', $user->user_id)->first();
+
+        if (!$organization) {
+            return redirect()->route('home')->with('error', 'Organization profile not found.');
+        }
+
+        // Validate the request
+        $validated = $request->validate([
+            'event_name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category' => 'nullable|string|max:100',
+            'event_date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i',
+            'location' => 'required|string|max:255',
+            'max_volunteers' => 'required|integer|min:1',
+            'status' => 'nullable|string|in:open,closed,cancelled'
+        ]);
+
+        // Additional validation: end_time must be after start_time
+        if (strtotime($validated['end_time']) <= strtotime($validated['start_time'])) {
+            return back()->withErrors(['end_time' => 'The end time must be after the start time.'])->withInput();
+        }
+
+        // Create the event
+        $event = Event::create([
+            'organization_id' => $organization->organization_id,
+            'event_name' => $validated['event_name'],
+            'description' => $validated['description'],
+            'category' => $validated['category'],
+            'event_date' => $validated['event_date'],
+            'start_time' => $validated['start_time'],
+            'end_time' => $validated['end_time'],
+            'location' => $validated['location'],
+            'max_volunteers' => $validated['max_volunteers'],
+            'status' => $validated['status'] ?? 'open',
+            'registered_count' => 0
+        ]);
+
+        return redirect()->route('organization.dashboard')
+            ->with('success', 'Event "' . $event->event_name . '" created successfully!');
     }
 }
