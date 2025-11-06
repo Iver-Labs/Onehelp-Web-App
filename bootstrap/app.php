@@ -71,7 +71,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Unauthenticated'
+                    'message' => 'Unauthenticated. Please login to access this resource.'
                 ], 401);
             }
         });
