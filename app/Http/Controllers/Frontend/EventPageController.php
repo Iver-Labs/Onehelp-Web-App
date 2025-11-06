@@ -18,6 +18,6 @@ class EventPageController extends Controller
     public function show($id)
     {
         $event = Event::with(['organization', 'images'])->findOrFail($id);
-        return view('pages.event-detail', compact('event'));
+        return view('pages.event-details', compact('event'));
     }
 }
