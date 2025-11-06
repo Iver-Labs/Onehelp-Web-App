@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // Add security headers to all responses
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         
+        // Sanitize input to prevent XSS
+        $middleware->append(\App\Http\Middleware\SanitizeInput::class);
+        
         // Set up rate limiting
         $middleware->throttleApi();
         
@@ -24,5 +27,68 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Handle API exceptions with JSON responses
+        $exceptions->render(function (\Illuminate\Validation\ValidationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+        });
+
+        $exceptions->render(function (\Illuminate\Database\Eloquent\ModelNotFoundException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Resource not found'
+                ], 404);
+            }
+        });
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Endpoint not found'
+                ], 404);
+            }
+        });
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Method not allowed'
+                ], 405);
+            }
+        });
+
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthenticated'
+                ], 401);
+            }
+        });
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage() ?: 'Server error'
+                ], $e->getStatusCode());
+            }
+        });
+
+        $exceptions->render(function (\Throwable $e, $request) {
+            if ($request->is('api/*') && !app()->environment('local')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An unexpected error occurred'
+                ], 500);
+            }
+        });
     })->create();
