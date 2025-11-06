@@ -1,738 +1,100 @@
-## 1. Layout File: `resources/views/layouts/app.blade.php`
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'OneHelp - Connecting Hearts to Communities')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-teal: #90C7D0;
-            --secondary-teal: #5FB9A8;
-            --dark-teal: #2C7A6E;
-            --accent-yellow: #F4D58D;
-            --light-yellow: #FFF4D6;
-            --cream: #FFF9E6;
-            --navy: #1A4D5E;
-            --text-dark: #2C3E50;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-dark);
-            overflow-x: hidden;
-        }
-
-        /* Navbar */
-        .navbar {
-            background: #1B3C53;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .navbar-brand {
-            color: white !important;
-            font-weight: 700;
-            font-size: 1.5rem;
-            letter-spacing: 0.5px;
-            padding: 0.5rem 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-logo {
-            height: 40px;
-            width: auto;
-            max-width: 150px;
-            object-fit: contain;
-            display: block;
-        }
-
-        .nav-link {
-            color: rgba(255,255,255,0.9) !important;
-            font-weight: 500;
-            padding: 0.5rem 1.2rem !important;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-link:hover {
-            color: var(--accent-yellow) !important;
-        }
-
-        .btn-login {
-            background: transparent;
-            color: white !important;
-            border: 2px solid white;
-            padding: 0.5rem 1.5rem !important;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            margin-left: 0.5rem !important;
-        }
-
-        .btn-login:hover {
-            background: white;
-            color: var(--dark-teal) !important;
-        }
-
-        .btn-signup {
-            background: var(--accent-yellow);
-            color: var(--navy) !important;
-            border: 2px solid var(--accent-yellow);
-            padding: 0.5rem 1.5rem !important;
-            border-radius: 25px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            margin-left: 0.5rem !important;
-        }
-
-        .btn-signup:hover {
-            background: transparent;
-            color: var(--accent-yellow) !important;
-            border-color: var(--accent-yellow);
-        }
-
-        /* Hero Section */
-        .hero-section {
-            position: relative;
-            min-height: 600px;
-            background: linear-gradient(rgba(28, 77, 94, 0.6), rgba(28, 77, 94, 0.6)), 
-                        url('https://via.placeholder.com/1920x800/7DD3C0/ffffff?text=Upload+Your+Hero+Image+Here') center/cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            padding: 4rem 2rem;
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            line-height: 1.2;
-        }
-
-        .hero-content p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-
-        .btn-browse-events {
-            background: var(--accent-yellow);
-            color: var(--navy);
-            padding: 1rem 3rem;
-            border-radius: 50px;
-            border: none;
-            font-size: 1.1rem;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 20px rgba(244, 213, 141, 0.4);
-        }
-
-        .btn-browse-events:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(244, 213, 141, 0.6);
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 3rem;
-            justify-content: center;
-            margin-top: 3rem;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        /* How It Works Section */
-        .how-it-works {
-            background: var(--primary-teal);
-            padding: 5rem 0;
-        }
-
-        .how-it-works h2 {
-            color: var(--navy);
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .how-card {
-            background: white;
-            border: 3px solid var(--navy);
-            border-radius: 20px;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        .how-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-        }
-
-        .how-icon {
-            width: 100px;
-            height: 100px;
-            background: var(--primary-teal);
-            border: 3px solid var(--navy);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 3rem;
-        }
-
-        .how-card h3 {
-            color: var(--navy);
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-        }
-
-        .how-card p {
-            color: var(--text-dark);
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        /* Featured Events Section */
-        .featured-events {
-            background: var(--accent-yellow);
-            padding: 5rem 0;
-        }
-
-        .featured-events h2 {
-            color: var(--navy);
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 4rem;
-            text-transform: uppercase;
-        }
-
-        .event-card {
-            background: var(--primary-teal);
-            border: 3px solid var(--navy);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .event-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-        }
-
-        .event-image {
-            width: calc(100% - 2rem);
-            height: 200px;
-            background: white;
-            border: 3px solid var(--navy);
-            margin: 1rem auto 0;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .event-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 12px;
-        }
-
-        .event-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .event-title {
-            color: var(--navy);
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .event-org {
-            color: var(--navy);
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .event-description {
-            color: var(--navy);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-            flex-grow: 1;
-        }
-
-        .event-meta {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            color: var(--navy);
-        }
-
-        .event-meta i {
-            margin-right: 0.3rem;
-        }
-
-        .event-tags {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-        }
-
-        .event-tag {
-            background: white;
-            color: var(--navy);
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border: 2px solid var(--navy);
-        }
-
-        .btn-view-details {
-            background: var(--accent-yellow);
-            color: var(--navy);
-            padding: 0.8rem 2rem;
-            border-radius: 25px;
-            border: 2px solid var(--navy);
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-            text-align: center;
-            display: inline-block;
-            text-decoration: none;
-        }
-
-        .btn-view-details:hover {
-            background: white;
-            color: var(--navy);
-            transform: translateY(-2px);
-        }
-
-        /* Sustainable Future Section */
-        .sustainable-section {
-            background: var(--primary-teal);
-            padding: 5rem 0;
-        }
-
-        .sustainable-section h2 {
-            color: var(--navy);
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-        }
-
-        .sustainable-section p {
-            color: var(--navy);
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 3rem;
-        }
-
-        .sdg-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            max-width: 500px;
-        }
-
-        .sdg-item {
-            width: 100%;
-            aspect-ratio: 1;
-            background: white;
-            border: 3px solid var(--navy);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .sdg-item:hover {
-            transform: scale(1.05);
-        }
-
-        .sdg-logo {
-            width: 100%;
-            margin-top: 2rem;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--accent-yellow);
-            padding: 3rem 0 1.5rem;
-        }
-
-        .footer-brand {
-            color: var(--navy);
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-tagline {
-            color: var(--navy);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .social-icon {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border: 2px solid var(--navy);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--navy);
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .social-icon:hover {
-            background: var(--navy);
-            color: white;
-            transform: translateY(-3px);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-column h4 {
-            color: var(--navy);
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-        }
-
-        .footer-column ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-column ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-column ul li a {
-            color: var(--navy);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .footer-column ul li a:hover {
-            color: var(--dark-teal);
-            padding-left: 5px;
-        }
-
-        .footer-bottom {
-            border-top: 2px solid var(--navy);
-            padding-top: 1.5rem;
-            text-align: center;
-            color: var(--navy);
-            font-size: 0.85rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-stats {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-
-            .how-it-works h2,
-            .featured-events h2,
-            .sustainable-section h2 {
-                font-size: 2rem;
-            }
-
-            .sdg-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .footer-links {
-                flex-direction: column;
-                gap: 2rem;
-            }
-        }
-    </style>
-    @stack('styles')
-</head>
-<body>
-    @include('components.navbar')
-
-    <main>
-        @yield('content')
-    </main>
-
-    @include('components.footer')
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    @stack('scripts')
-</body>
-</html>
-```
-
-## 2. Current Volunteer Dashboard
-
-No such file exists: `resources/views/volunteer/dashboard.blade.php`
-
-## 3. VolunteerController: `app/Http/Controllers/VolunteerController.php`
-
-```php
-<?php
-
-namespace App\Http\Controllers;
-
-use App\Models\Volunteer;
-use Illuminate\Http\Request;
-
-class VolunteerController extends Controller
-{
-    public function index() {
-        return response()->json(Volunteer::with('skills')->get());
-    }
-
-    public function store(Request $request) {
-        $volunteer = Volunteer::create($request->all());
-        return response()->json($volunteer, 201);
-    }
-
-    public function show($id) {
-        return response()->json(Volunteer::with('skills')->findOrFail($id));
-    }
-
-    public function update(Request $request, $id) {
-        $volunteer = Volunteer::findOrFail($id);
-        $volunteer->update($request->all());
-        return response()->json($volunteer);
-    }
-
-    public function destroy($id) {
-        Volunteer::destroy($id);
-        return response()->json(null, 204);
-    }
-}
-```
-
-## 4. Models
-
-### `app/Models/Volunteer.php`
-
-```php
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Volunteer extends Model
-{
-    use HasFactory;
-
-    protected $primaryKey = 'volunteer_id';
-    protected $fillable = [
-        'user_id', 'first_name', 'last_name', 'phone', 'address',
-        'date_of_birth', 'bio', 'profile_image', 'total_hours', 'events_completed'
-    ];
-
-    public function user() {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function registrations() {
-        return $this->hasMany(EventRegistration::class, 'volunteer_id');
-    }
-
-    public function skills() {
-        return $this->belongsToMany(Skill::class, 'volunteer_skills', 'volunteer_id', 'skill_id')
-                    ->withPivot('proficiency_level')
-                    ->withTimestamps();
-    }
-}
-```
-
-### `app/Models/Event.php`
-
-```php
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Event extends Model
-{
-    use HasFactory;
-
-    protected $primaryKey = 'event_id';
-    protected $fillable = [
-        'organization_id', 'event_name', 'description', 'category',
-        'event_date', 'start_time', 'end_time', 'location',
-        'max_volunteers', 'registered_count', 'status'
-    ];
-
-    public function organization() {
-        return $this->belongsTo(Organization::class, 'organization_id');
-    }
-
-    public function registrations() {
-        return $this->hasMany(EventRegistration::class, 'event_id');
-    }
-
-    public function skills() {
-        return $this->belongsToMany(Skill::class, 'event_skills', 'event_id', 'skill_id')
-                    ->withPivot('is_required')
-                    ->withTimestamps();
-    }
-
-    public function images() {
-        return $this->hasMany(EventImage::class, 'event_id');
-    }
-}
-```
-
-### `app/Models/EventRegistration.php`
-
-```php
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class EventRegistration extends Model
-{
-    use HasFactory;
-
-    protected $table = 'event_registrations';
-
-    protected $primaryKey = 'registration_id';
-    protected $fillable = [
-        'event_id', 'volunteer_id', 'registered_at', 'status', 'notes',
-        'hours_contributed', 'certificate_issued'
-    ];
-
-    public function volunteer() {
-        return $this->belongsTo(Volunteer::class, 'volunteer_id');
-    }
-
-    public function event() {
-        return $this->belongsTo(Event::class, 'event_id');
-    }
-
-    public function attendance() {
-        return $this->hasMany(Attendance::class, 'registration_id');
-    }
-
-    public function feedback() {
-        return $this->hasOne(Feedback::class, 'registration_id');
-    }
-}
-```
-
-## 5. Routes: `routes/web.php` (volunteer-related routes)
-
-```php
-// ===============================
-// PROTECTED ROUTES (Require Authentication)
-// ===============================
-Route::middleware(['auth'])->group(function () {
-    // Volunteer Dashboard (placeholder for now)
-    Route::get('/volunteer/dashboard', function () {
-        return view('volunteer.dashboard');
-    })->name('volunteer.dashboard');
-
-    // Organization Dashboard (placeholder for now)
-    Route::get('/organization/dashboard', function () {
-        return view('organization.dashboard');
-    })->name('organization.dashboard');
-
-    // Admin Dashboard (placeholder for now)
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-});
-```
-
-## 6. Tailwind Config
-
-No such file exists: `tailwind.config.js`
+# OneHelp Project: System Architecture and Workflow
+
+## 1. High-Level Overview
+
+**OneHelp** is a comprehensive volunteer management platform built with Laravel. It connects two primary user types: **Volunteers** seeking opportunities and **Organizations** in need of assistance. The system provides a complete workflow, from user registration to event participation and communication, all managed through dedicated dashboards.
+
+### Core User Journeys:
+
+- **Volunteer Journey:** A volunteer registers, completes their profile with skills and interests, browses for events, registers for an event, communicates with the organization via a messaging system, and tracks their volunteering history and impact.
+- **Organization Journey:** An organization registers, gets verified, creates and manages events, reviews and approves volunteer applications, communicates with volunteers, and tracks their impact through analytics.
+- **Admin Journey (Conceptual):** An administrator would oversee the platform, verify organizations, and manage users, although this is not fully implemented yet.
+
+## 2. Technical Stack
+
+- **Backend:** Laravel 12, a robust PHP framework that follows the Model-View-Controller (MVC) architectural pattern.
+- **Frontend:** Laravel Blade templating engine, styled with Tailwind CSS. The frontend is not a single-page application (SPA) but a classic server-rendered application.
+- **Database:** The migrations suggest a MySQL database, which is standard for Laravel applications.
+- **Development Tools:** Vite for frontend asset bundling, Composer for PHP package management, and NPM for JavaScript dependencies.
+
+## 3. Deep Dive: The MVC Architecture
+
+The project is structured around the MVC pattern, which separates the application's logic from its presentation.
+
+### Models (`app/Models`)
+
+Models are the heart of the application, representing the database tables and defining the relationships between them. They are the primary way the application interacts with its data.
+
+- **`User`**: The foundational model for authentication. It has a `user_type` attribute that determines if the user is a `volunteer`, `organization`, or `admin`.
+    - **Key Relationships:**
+        - A `User` can have one `Volunteer` profile (`hasOne`).
+        - A `User` can have one `Organization` profile (`hasOne`).
+        - A `User` can send and receive many `Messages` (`hasMany`).
+
+- **`Volunteer` & `Organization`**: These models store the specific profile information for each user type and are linked back to the `User` model.
+
+- **`Event`**: This model represents a volunteering opportunity created by an `Organization`.
+    - **Key Relationships:**
+        - An `Event` belongs to one `Organization` (`belongsTo`).
+        - An `Event` can have many `EventRegistrations` (`hasMany`).
+        - An `Event` can require many `Skills` (`belongsToMany`).
+
+- **`EventRegistration`**: This is a crucial pivot model that connects a `Volunteer` to an `Event`.
+    - **Key Attributes:** `status` (pending, approved, rejected), `hours_contributed`.
+    - **Key Relationships:**
+        - It belongs to one `Event` and one `Volunteer` (`belongsTo`).
+
+- **`Message`**: This model powers the communication system.
+    - **Key Attributes:** `sender_id`, `receiver_id`, `message`, `is_read`.
+    - **Key Relationships:**
+        - A `Message` belongs to a `sender` (`User`) and a `receiver` (`User`).
+
+### Views (`resources/views`)
+
+Views are the frontend templates that the user sees. They are written in Blade, which allows for embedding PHP code within HTML.
+
+- **`layouts/`**: This directory contains the master layout files (`volunteer-app.blade.php`, `org-app.blade.php`). These files define the common structure of the pages (header, footer, navigation) and are extended by other views.
+- **`volunteer/` & `organization/`**: These directories contain the specific views for each user type's dashboard, profile, and messages pages.
+    - **`dashboard.blade.php`**: The main landing page for a logged-in user, displaying statistics and recent activity.
+    - **`messages.blade.php`**: The view for the messaging interface. It's designed to be reusable, displaying a list of conversations and the messages within them.
+- **`auth/`**: Contains the login and registration forms.
+
+### Controllers (`app/Http/Controllers`)
+
+Controllers act as the intermediary between Models and Views. They handle incoming requests, fetch data from the Models, and pass that data to the Views to be rendered.
+
+- **`VolunteerController` & `OrganizationController`**: These are the main controllers for each user type. They contain the logic for their respective dashboards, profiles, and other features.
+    - The `dashboard()` method in each controller is a good example of the MVC workflow: it fetches data from various models (`Event`, `EventRegistration`), processes it, and passes it to the `dashboard` view.
+
+- **`MessagesController`**: Although not fully utilized as intended (the logic is currently in the `VolunteerController` and `OrganizationController`), this controller is designed to handle the messaging functionality.
+
+- **`Auth/` Controllers**: These controllers handle the user authentication process (registration and login).
+
+## 4. Routing and Data Flow
+
+Routes are defined in `routes/web.php` and `routes/api.php`. They map incoming URLs to specific controller methods.
+
+- **Web Routes (`routes/web.php`):**
+    - The routes are organized into groups based on whether they are public, for volunteers, or for organizations.
+    - The `auth` middleware is used to protect routes that require a user to be logged in.
+    - The `prefix` and `name` methods are used to keep the routes organized (e.g., all volunteer routes start with `/volunteer` and are named `volunteer.*`).
+
+- **API Routes (`routes/api.php`):**
+    - These routes provide a RESTful API for the application's data. They are not used by the web interface but could be used by a mobile app or a JavaScript frontend in the future.
+
+### Example Data Flow: Viewing the Organization Dashboard
+
+1.  An organization user navigates to `/organization/dashboard`.
+2.  The `routes/web.php` file maps this URL to the `dashboard()` method in the `OrganizationController`.
+3.  The `dashboard()` method fetches the organization's data from the `Organization` model, calculates statistics by querying the `Event` and `EventRegistration` models, and gets recent activity.
+4.  The controller then passes this data to the `organization.dashboard` view.
+5.  The Blade view renders the HTML, displaying the data provided by the controller.
+
+## 5. Database Seeding
+
+The `database/seeders` directory contains files that populate the database with initial data for testing and development.
+
+- **`DatabaseSeeder.php`**: The main seeder file that orchestrates the seeding process. It calls other seeders in the correct order to ensure that foreign key constraints are not violated.
+- **Test Data:** The seeder creates a set of test users, including `volunteer1@test.com` and `org1@test.com`, both with the password `password`.
+
+This detailed breakdown should provide a clear understanding of how the OneHelp application is structured and how its various components work together.
