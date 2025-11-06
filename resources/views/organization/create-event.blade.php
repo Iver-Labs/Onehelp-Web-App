@@ -29,7 +29,7 @@
     </div>
     @endif
 
-    <form method="POST" action="{{ route('organization.events.store') }}" style="padding: 20px;">
+    <form method="POST" action="{{ route('organization.events.store') }}" enctype="multipart/form-data" style="padding: 20px;">
         @csrf
         
         <!-- Event Name -->
@@ -62,6 +62,25 @@
                 onfocus="this.style.borderColor='#7CB5B3'" 
                 onblur="this.style.borderColor='#E5E7EB'"
             >{{ old('description') }}</textarea>
+        </div>
+
+        <!-- Event Image -->
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 14px; font-weight: 600; color: #2C3E50; margin-bottom: 8px;">
+                Event Image <span style="color: #EF4444;">*</span>
+            </label>
+            <input 
+                type="file" 
+                name="event_image" 
+                accept="image/jpeg,image/jpg,image/png"
+                required
+                style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 14px; color: #2C3E50; transition: all 0.2s;"
+                onfocus="this.style.borderColor='#7CB5B3'" 
+                onblur="this.style.borderColor='#E5E7EB'"
+            >
+            <p style="font-size: 12px; color: #6B7280; margin-top: 6px;">
+                Accepted formats: JPG, JPEG, PNG. Maximum size: 2MB
+            </p>
         </div>
 
         <!-- Category -->
