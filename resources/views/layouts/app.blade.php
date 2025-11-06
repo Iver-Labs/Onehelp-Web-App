@@ -106,16 +106,6 @@
             border-color: var(--accent-yellow);
         }
 
-        /* Ensure navbar stays horizontal on desktop */
-        @media (min-width: 992px) {
-            .navbar-collapse {
-                display: flex !important;
-            }
-            .navbar-nav {
-                flex-direction: row !important;
-            }
-        }
-
         /* Hero Section */
         .hero-section {
             position: relative;
@@ -278,7 +268,7 @@
 
         .event-image {
             width: calc(100% - 2rem);
-            height: 150px;
+            height: 200px;
             background: white;
             border: 3px solid var(--navy);
             margin: 1rem auto 0;
