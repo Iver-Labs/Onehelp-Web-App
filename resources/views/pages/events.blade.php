@@ -43,38 +43,30 @@
         </div>
 
         <!-- Events Grid -->
-        <div class="d-flex flex-wrap justify-content-center gap-4">
-            @forelse ($events as $event)
-                <div class="event-card shadow-sm"
-                    style="flex: 1 1 calc(33.333% - 2rem); max-width: 360px; min-width: 280px;">
+        <div class="row g-4">
+            @for ($i = 1; $i <= 8; $i++)
+            <div class="col-md-6 col-lg-3">
+                <div class="event-card">
                     <div class="event-image">
-                        @if ($event->images && count($event->images))
-                            <img src="{{ asset('storage/' . $event->images[0]->image_url) }}" 
-                                alt="{{ $event->event_name }}">
-                        @else
-                            <img src="{{ asset('images/event-placeholder.jpg') }}" 
-                                alt="{{ $event->event_name }}">
-                        @endif
+                        <img src="https://via.placeholder.com/300x200/{{ $i % 2 == 0 ? '7DD3C0' : 'F4D58D' }}/1A4D5E?text=Event+{{ $i }}" alt="Event {{ $i }}">
                     </div>
                     <div class="event-content">
-                        <h3 class="event-title">{{ $event->event_name }}</h3>
-                        <p class="event-org">{{ $event->organization->org_name ?? 'Community Partner' }}</p>
-                        <p class="event-description">{{ $event->short_description ?? Str::limit($event->description, 100) }}</p>
+                        <h3 class="event-title">Sample Event {{ $i }}</h3>
+                        <p class="event-org">Organization Name {{ $i }}</p>
+                        <p class="event-description">Join us for this amazing volunteer opportunity that will make a real difference in our community.</p>
                         <div class="event-meta">
-                            <span><i class="far fa-calendar"></i> {{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</span>
-                            <span><i class="far fa-clock"></i> {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }}</span>
+                            <span><i class="far fa-calendar"></i> Dec {{ 10 + $i }}, 2024</span>
+                            <span><i class="far fa-clock"></i> {{ 8 + $i }}:00 AM</span>
                         </div>
-                        @if($event->category)
                         <div class="event-tags">
-                            <span class="event-tag">{{ $event->category }}</span>
+                            <span class="event-tag">{{ $i % 2 == 0 ? 'Environment' : 'Community' }}</span>
+                            <span class="event-tag">{{ $i % 3 == 0 ? 'Indoor' : 'Outdoor' }}</span>
                         </div>
-                        @endif
-                        <a href="{{ route('events.show', $event->event_id) }}" class="btn-view-details">View Details</a>
+                        <a href="{{ url('/events/' . $i) }}" class="btn-view-details">View Details</a>
                     </div>
                 </div>
-            @empty
-                <p class="text-center text-muted fs-5">No events available at the moment.</p>
-            @endforelse
+            </div>
+            @endfor
         </div>
 
         <!-- Pagination -->
@@ -129,25 +121,6 @@
         background-color: var(--accent-yellow);
         border-color: var(--navy);
         color: var(--navy);
-    }
-
-    .event-card {
-        background: #EAF2F8;
-        border-radius: 16px;
-        overflow: hidden;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border: 3px solid var(--navy);
-    }
-
-    .event-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .event-card .event-image img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
     }
 </style>
 @endpush
