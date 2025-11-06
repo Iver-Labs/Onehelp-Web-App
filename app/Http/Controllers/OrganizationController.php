@@ -454,20 +454,17 @@ class OrganizationController extends Controller
             'registered_count' => 0
         ]);
 
-        // Handle image upload
-        if ($request->hasFile('event_image')) {
-            $image = $request->file('event_image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('events', $imageName, 'public');
-            
-            // Create event image record
-            EventImage::create([
-                'event_id' => $event->event_id,
-                'image_url' => 'storage/' . $imagePath,
-                'is_primary' => true,
-                'uploaded_at' => now()
-            ]);
-        }
+        // Handle image upload (validation ensures file exists)
+        $image = $request->file('event_image');
+        $imagePath = $image->store('events', 'public');
+        
+        // Create event image record
+        EventImage::create([
+            'event_id' => $event->event_id,
+            'image_url' => 'storage/' . $imagePath,
+            'is_primary' => true,
+            'uploaded_at' => now()
+        ]);
 
         return redirect()->route('organization.dashboard')
             ->with('success', 'Event "' . $event->event_name . '" created successfully!');
