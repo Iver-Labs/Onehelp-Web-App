@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Organization;
 use App\Models\Event;
 use App\Models\EventRegistration;
+use App\Models\EventImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Message;
@@ -428,7 +430,8 @@ class OrganizationController extends Controller
             'end_time' => 'required|date_format:H:i',
             'location' => 'required|string|max:255',
             'max_volunteers' => 'required|integer|min:1',
-            'status' => 'nullable|string|in:open,closed,cancelled'
+            'status' => 'nullable|string|in:open,closed,cancelled',
+            'event_image' => 'required|image|mimes:jpeg,jpg,png|max:2048'
         ]);
 
         // Additional validation: end_time must be after start_time
@@ -450,6 +453,21 @@ class OrganizationController extends Controller
             'status' => $validated['status'] ?? 'open',
             'registered_count' => 0
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('event_image')) {
+            $image = $request->file('event_image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imagePath = $image->storeAs('events', $imageName, 'public');
+            
+            // Create event image record
+            EventImage::create([
+                'event_id' => $event->event_id,
+                'image_url' => 'storage/' . $imagePath,
+                'is_primary' => true,
+                'uploaded_at' => now()
+            ]);
+        }
 
         return redirect()->route('organization.dashboard')
             ->with('success', 'Event "' . $event->event_name . '" created successfully!');
