@@ -15,6 +15,20 @@ use App\Models\User;
 class OrganizationController extends Controller
 {
     /**
+     * Get pending applications count for the organization and share with views
+     */
+    private function sharePendingCount($organizationId)
+    {
+        $pendingCount = EventRegistration::whereHas('event', function($query) use ($organizationId) {
+            $query->where('organization_id', $organizationId);
+        })->where('status', 'pending')->count();
+        
+        view()->share('pendingCount', $pendingCount);
+        
+        return $pendingCount;
+    }
+
+    /**
      * Display the organization dashboard
      */
     public function dashboard()
@@ -44,12 +58,7 @@ class OrganizationController extends Controller
         $monthlyImpact = $this->getMonthlyImpact($organization->organization_id);
         
         // Get pending applications count
-        $pendingCount = EventRegistration::whereHas('event', function($query) use ($organization) {
-            $query->where('organization_id', $organization->organization_id);
-        })->where('status', 'pending')->count();
-        
-        // Share pending count with sidebar
-        view()->share('pendingCount', $pendingCount);
+        $pendingCount = $this->sharePendingCount($organization->organization_id);
         
         return view('organization.dashboard', compact(
             'organization',
@@ -236,8 +245,7 @@ class OrganizationController extends Controller
         ->get();
         
         // Get pending count
-        $pendingCount = $applications->where('status', 'pending')->count();
-        view()->share('pendingCount', $pendingCount);
+        $this->sharePendingCount($organization->organization_id);
         
         return view('organization.applications', compact('applications', 'organization'));
     }
@@ -271,11 +279,7 @@ class OrganizationController extends Controller
             return redirect()->route('home')->with('error', 'Organization profile not found.');
         }
         
-        $pendingCount = EventRegistration::whereHas('event', function($query) use ($organization) {
-            $query->where('organization_id', $organization->organization_id);
-        })->where('status', 'pending')->count();
-        
-        view()->share('pendingCount', $pendingCount);
+        $this->sharePendingCount($organization->organization_id);
         
         return view('organization.analytics', compact('organization'));
     }
@@ -397,11 +401,7 @@ class OrganizationController extends Controller
             return redirect()->route('home')->with('error', 'Organization profile not found.');
         }
 
-        $pendingCount = EventRegistration::whereHas('event', function($query) use ($organization) {
-            $query->where('organization_id', $organization->organization_id);
-        })->where('status', 'pending')->count();
-
-        view()->share('pendingCount', $pendingCount);
+        $this->sharePendingCount($organization->organization_id);
 
         return view('organization.create-event', compact('organization'));
     }

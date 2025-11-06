@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Organization;
 use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Carbon\Carbon;
 
 class OrganizationEventCreationTest extends TestCase
 {
@@ -39,7 +40,7 @@ class OrganizationEventCreationTest extends TestCase
             'event_name' => 'Community Cleanup',
             'description' => 'Help clean up the local park',
             'category' => 'Environment',
-            'event_date' => '2025-12-15',
+            'event_date' => Carbon::tomorrow()->format('Y-m-d'),
             'start_time' => '09:00',
             'end_time' => '12:00',
             'location' => 'Central Park',
@@ -83,7 +84,7 @@ class OrganizationEventCreationTest extends TestCase
         // Submit with invalid data (end_time before start_time)
         $response = $this->post(route('organization.events.store'), [
             'event_name' => 'Invalid Event',
-            'event_date' => '2025-12-15',
+            'event_date' => Carbon::tomorrow()->format('Y-m-d'),
             'start_time' => '14:00',
             'end_time' => '12:00',  // Invalid: before start_time
             'location' => 'Some Location',
