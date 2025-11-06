@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Models\Message;
+use App\Models\User;
 
 class VolunteerController extends Controller
 {
@@ -143,10 +145,6 @@ class VolunteerController extends Controller
         // TODO: Implement events listing page
         return view('volunteer.events');
     }
-    
-    /**
-     * Display the volunteer profile page
-     */
     public function profile()
     {
         $user = Auth::user();
@@ -309,41 +307,98 @@ class VolunteerController extends Controller
     }
     
     /**
-     * Display the messages page
-     */
-    public function messages()
-    {
-        // TODO: Implement messages functionality
-        return view('volunteer.messages');
+ * Display the messages page
+ */
+public function messages(Request $request)
+{
+    $currentUserId = auth()->id();
+    $selectedUserId = $request->get('user_id');
+    
+    // Get all unique conversations for this volunteer
+    $conversationUsers = Message::where(function($query) use ($currentUserId) {
+            $query->where('sender_id', $currentUserId)
+                  ->orWhere('receiver_id', $currentUserId);
+        })
+        ->with(['sender.organization', 'sender.volunteer', 'receiver.organization', 'receiver.volunteer'])
+        ->get()
+        ->flatMap(function($message) use ($currentUserId) {
+            // Get the other user (not current user)
+            return $message->sender_id == $currentUserId 
+                ? [$message->receiver] 
+                : [$message->sender];
+        })
+        ->unique('user_id')
+        ->filter(); // Remove any null values
+    
+    // Build conversations array with latest message and unread count
+    $conversations = $conversationUsers->map(function($user) use ($currentUserId) {
+        // Get latest message between current user and this user
+        $latestMessage = Message::betweenUsers($currentUserId, $user->user_id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        
+        // Count unread messages from this user
+        $unreadCount = Message::where('sender_id', $user->user_id)
+            ->where('receiver_id', $currentUserId)
+            ->where('is_read', false)
+            ->count();
+        
+        return [
+            'user' => $user,
+            'latest_message' => $latestMessage,
+            'unread_count' => $unreadCount
+        ];
+    })
+    ->sortByDesc(function($conversation) {
+        return $conversation['latest_message']->created_at ?? now();
+    })
+    ->values();
+    
+    // Get selected user and messages if user_id is provided
+    $selectedUser = null;
+    $messages = collect();
+    
+    if ($selectedUserId) {
+        $selectedUser = User::with(['organization', 'volunteer'])->find($selectedUserId);
+        
+        if ($selectedUser) {
+            // Get all messages between current user and selected user
+            $messages = Message::betweenUsers($currentUserId, $selectedUserId)
+                ->orderBy('created_at', 'asc')
+                ->get();
+            
+            // Mark messages from selected user as read
+            Message::where('sender_id', $selectedUserId)
+                ->where('receiver_id', $currentUserId)
+                ->where('is_read', false)
+                ->update([
+                    'is_read' => true,
+                    'read_at' => now()
+                ]);
+        }
     }
     
-    // API Methods
-    public function index()
-    {
-        return response()->json(Volunteer::with('skills')->get());
-    }
+    return view('volunteer.messages', compact('conversations', 'selectedUser', 'messages'));
+}
 
-    public function store(Request $request)
-    {
-        $volunteer = Volunteer::create($request->all());
-        return response()->json($volunteer, 201);
-    }
-
-    public function show($id)
-    {
-        return response()->json(Volunteer::with('skills')->findOrFail($id));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $volunteer = Volunteer::findOrFail($id);
-        $volunteer->update($request->all());
-        return response()->json($volunteer);
-    }
-
-    public function destroy($id)
-    {
-        Volunteer::destroy($id);
-        return response()->json(null, 204);
-    }
+/**
+ * Send a message
+ */
+public function sendMessage(Request $request)
+{
+    $request->validate([
+        'receiver_id' => 'required|exists:users,user_id',
+        'message' => 'required|string|max:1000'
+    ]);
+    
+    Message::create([
+        'sender_id' => auth()->id(),
+        'receiver_id' => $request->receiver_id,
+        'message' => $request->message,
+        'is_read' => false
+    ]);
+    
+    return redirect()->route('volunteer.messages', ['user_id' => $request->receiver_id])
+        ->with('success', 'Message sent successfully!');
+}
 }

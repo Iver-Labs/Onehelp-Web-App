@@ -75,4 +75,39 @@ class User extends Authenticatable
         $this->last_login = now();
         $this->save();
     }
+
+    /**
+ * Messages sent by this user
+ */
+public function sentMessages()
+{
+    return $this->hasMany(Message::class, 'sender_id', 'user_id');
+}
+
+/**
+ * Messages received by this user
+ */
+public function receivedMessages()
+{
+    return $this->hasMany(Message::class, 'receiver_id', 'user_id');
+}
+
+/**
+ * Get all messages (sent and received)
+ */
+public function messages()
+{
+    return Message::where('sender_id', $this->user_id)
+                  ->orWhere('receiver_id', $this->user_id)
+                  ->orderBy('created_at', 'desc')
+                  ->get();
+}
+
+/**
+ * Get unread messages count
+ */
+public function unreadMessagesCount()
+{
+    return $this->receivedMessages()->where('is_read', false)->count();
+}
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\VolunteerController;
+use App\Http\Controllers\MessagesController;
 
 // ===============================
 // FRONTEND ROUTES
@@ -47,7 +48,10 @@ Route::post('/register/organization', [RegisterController::class, 'registerOrgan
     ->name('register.organization')
     ->middleware('guest');
 
-    Route::middleware(['auth'])->group(function () {
+   // ===============================
+// PROTECTED ROUTES (Require Authentication)
+// ===============================
+Route::middleware(['auth'])->group(function () {
     
     // Volunteer Routes
     Route::prefix('volunteer')->name('volunteer.')->group(function () {
@@ -77,6 +81,7 @@ Route::post('/register/organization', [RegisterController::class, 'registerOrgan
         return view('admin.dashboard');
     })->name('admin.dashboard');
 });
+
 
     
 

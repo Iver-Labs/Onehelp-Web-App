@@ -1,25 +1,24 @@
 <aside class="sidebar">
     <!-- Logo -->
     <div class="sidebar-logo">
-        <div class="sidebar-logo-icon">
-            <!-- PLACEHOLDER: Replace with your logo SVG/image -->
-            OH
-        </div>
-        <span class="sidebar-logo-text">OneHelp</span>
+        <img src="{{ asset('/images/Onehelp-dark-logo.svg') }}" alt="Logo">
     </div>
 
     <!-- Profile Card -->
     <div class="sidebar-profile">
         <div class="sidebar-profile-header">
             <div class="sidebar-profile-icon">
-                <!-- PLACEHOLDER: User avatar -->
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                </svg>
+                @if(auth()->user()->volunteer && auth()->user()->volunteer->profile_image)
+                    <img src="{{ asset('storage/' . auth()->user()->volunteer->profile_image) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                @else
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                @endif
             </div>
             <div class="sidebar-profile-info">
                 <h3>Volunteer<br>Dashboard</h3>
-                <p>[username]</p>
+                <p>{{ auth()->user()->volunteer->first_name ?? 'User' }}</p>
             </div>
         </div>
         
@@ -57,7 +56,7 @@
             </svg>
             Profile
             @if(auth()->user()->volunteer && !auth()->user()->volunteer->profile_image)
-            <span class="sidebar-nav-badge">1</span>
+            <!--<span class="sidebar-nav-badge">1</span>-->
             @endif
         </a>
 

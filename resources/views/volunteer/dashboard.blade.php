@@ -7,13 +7,16 @@
 <div class="welcome-section">
     <div class="welcome-header">
         <div class="welcome-avatar">
-            <!-- PLACEHOLDER: User avatar image -->
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg>
+            @if(auth()->user()->volunteer && auth()->user()->volunteer->profile_image)
+                <img src="{{ asset('storage/' . auth()->user()->volunteer->profile_image) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            @else
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+            @endif
         </div>
         <div class="welcome-text">
-            <h1>Welcome back, [username]!</h1>
+            <h1>Welcome back, {{ auth()->user()->volunteer->first_name ?? 'Volunteer' }}!</h1>
             <p>See the difference you're making.</p>
         </div>
     </div>

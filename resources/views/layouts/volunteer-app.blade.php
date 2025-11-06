@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-            background: #A8C9C5;
+            background: #90C7D0;
             overflow-x: hidden;
         }
 
@@ -27,7 +27,7 @@
         /* Sidebar Styles */
         .sidebar {
             width: 200px;
-            background: #E8D4A7;
+            background: #EFD191;
             padding: 20px 15px;
             display: flex;
             flex-direction: column;
