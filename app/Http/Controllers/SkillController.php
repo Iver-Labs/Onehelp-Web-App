@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class SkillController extends Controller
 {
-    public function __construct()
-    {
-        // Skills list is public, but modifications require auth
-        $this->middleware('api.auth')->except(['index', 'show']);
-    }
 
     public function index() {
         // Public endpoint - anyone can view skills list

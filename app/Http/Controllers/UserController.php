@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        // Require authentication for all user operations
-        $this->middleware('api.auth');
-    }
 
     public function index() {
         // Only admins can list all users

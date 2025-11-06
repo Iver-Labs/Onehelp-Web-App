@@ -8,10 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('api.auth');
-    }
 
     public function index() {
         // Users can only see their own notifications

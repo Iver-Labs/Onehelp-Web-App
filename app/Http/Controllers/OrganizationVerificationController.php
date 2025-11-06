@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class OrganizationVerificationController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('api.auth');
-    }
 
     public function index() {
         // Only admins can list all verifications

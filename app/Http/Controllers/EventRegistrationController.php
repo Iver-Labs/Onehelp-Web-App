@@ -12,10 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class EventRegistrationController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('api.auth');
-    }
 
     public function index() {
         $user = Auth::user();

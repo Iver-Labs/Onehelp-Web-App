@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
-    public function __construct()
-    {
-        // Public routes don't need auth
-        $this->middleware('api.auth')->except(['index', 'show']);
-    }
 
     public function index() {
         // Public endpoint - anyone can view events list
@@ -44,11 +39,20 @@ class EventController extends Controller
             'long_description' => 'nullable|string',
             'event_date' => 'required|date|after:today',
             'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
+            'end_time' => 'required|date_format:H:i',
             'location' => 'required|string|max:255',
             'max_volunteers' => 'required|integer|min:1|max:10000',
             'status' => 'sometimes|in:open,closed,cancelled',
         ]);
+
+        // Validate end_time is after start_time
+        if ($validated['end_time'] <= $validated['start_time']) {
+            return response()->json([
+                'success' => false,
+                'message' => 'End time must be after start time',
+                'errors' => ['end_time' => ['End time must be after start time']]
+            ], 422);
+        }
 
         // Verify the organization belongs to the authenticated user
         $organization = Organization::where('organization_id', $validated['organization_id'])

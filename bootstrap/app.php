@@ -18,8 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // Sanitize input to prevent XSS
         $middleware->append(\App\Http\Middleware\SanitizeInput::class);
         
-        // Set up rate limiting
-        $middleware->throttleApi();
+        // Set up rate limiting (disabled in testing environment)
+        if (!app()->environment('testing')) {
+            $middleware->throttleApi();
+        }
         
         // Register named middleware aliases
         $middleware->alias([
