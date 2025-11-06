@@ -44,29 +44,37 @@
 
         <!-- Events Grid -->
         <div class="row g-4">
-            @for ($i = 1; $i <= 8; $i++)
+            @forelse ($events as $event)
             <div class="col-md-6 col-lg-3">
                 <div class="event-card">
                     <div class="event-image">
-                        <img src="https://via.placeholder.com/300x200/{{ $i % 2 == 0 ? '7DD3C0' : 'F4D58D' }}/1A4D5E?text=Event+{{ $i }}" alt="Event {{ $i }}">
+                        @if($event->images->isNotEmpty())
+                            <img src="{{ asset($event->images->first()->image_url) }}" alt="{{ $event->event_name }}">
+                        @else
+                            <img src="https://via.placeholder.com/300x200/7DD3C0/1A4D5E?text=Event" alt="{{ $event->event_name }}">
+                        @endif
                     </div>
                     <div class="event-content">
-                        <h3 class="event-title">Sample Event {{ $i }}</h3>
-                        <p class="event-org">Organization Name {{ $i }}</p>
-                        <p class="event-description">Join us for this amazing volunteer opportunity that will make a real difference in our community.</p>
+                        <h3 class="event-title">{{ Str::limit($event->event_name, 50) }}</h3>
+                        <p class="event-org">{{ $event->organization->org_name ?? 'Community Partner' }}</p>
+                        <p class="event-description">{{ Str::limit(explode("\n", $event->description)[0], 100) }}</p>
                         <div class="event-meta">
-                            <span><i class="far fa-calendar"></i> Dec {{ 10 + $i }}, 2024</span>
-                            <span><i class="far fa-clock"></i> {{ 8 + $i }}:00 AM</span>
+                            <span><i class="far fa-calendar"></i> {{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</span>
+                            <span><i class="far fa-clock"></i> {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }}</span>
                         </div>
                         <div class="event-tags">
-                            <span class="event-tag">{{ $i % 2 == 0 ? 'Environment' : 'Community' }}</span>
-                            <span class="event-tag">{{ $i % 3 == 0 ? 'Indoor' : 'Outdoor' }}</span>
+                            <span class="event-tag">{{ $event->category }}</span>
+                            <span class="event-tag">{{ $event->registered_count }}/{{ $event->max_volunteers }} slots</span>
                         </div>
-                        <a href="{{ url('/events/' . $i) }}" class="btn-view-details">View Details</a>
+                        <a href="{{ route('events.show', $event->event_id) }}" class="btn-view-details">View Details</a>
                     </div>
                 </div>
             </div>
-            @endfor
+            @empty
+            <div class="col-12 text-center">
+                <p>No events available at the moment.</p>
+            </div>
+            @endforelse
         </div>
 
         <!-- Pagination -->
