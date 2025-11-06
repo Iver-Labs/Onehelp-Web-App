@@ -91,11 +91,14 @@
         border-radius: 20px;
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        max-height: 400px;
     }
 
     .event-detail-image img {
         width: 100%;
-        height: auto;
+        height: 100%;
+        max-height: 400px;
+        object-fit: cover;
         display: block;
     }
 
