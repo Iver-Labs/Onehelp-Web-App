@@ -384,4 +384,69 @@ class OrganizationController extends Controller
 
         return view('organization.messages', compact('organization', 'conversations', 'selectedUser', 'messages'));
     }
+
+    /**
+     * Show the form for creating a new event
+     */
+    public function createEvent()
+    {
+        $user = Auth::user();
+        $organization = Organization::where('user_id', $user->user_id)->first();
+
+        if (!$organization) {
+            return redirect()->route('home')->with('error', 'Organization profile not found.');
+        }
+
+        $pendingCount = EventRegistration::whereHas('event', function($query) use ($organization) {
+            $query->where('organization_id', $organization->organization_id);
+        })->where('status', 'pending')->count();
+
+        view()->share('pendingCount', $pendingCount);
+
+        return view('organization.create-event', compact('organization'));
+    }
+
+    /**
+     * Store a newly created event
+     */
+    public function storeEvent(Request $request)
+    {
+        $user = Auth::user();
+        $organization = Organization::where('user_id', $user->user_id)->first();
+
+        if (!$organization) {
+            return redirect()->route('home')->with('error', 'Organization profile not found.');
+        }
+
+        // Validate the request
+        $validated = $request->validate([
+            'event_name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category' => 'nullable|string|max:100',
+            'event_date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'location' => 'required|string|max:255',
+            'max_volunteers' => 'required|integer|min:1',
+            'status' => 'nullable|string|in:open,closed,cancelled'
+        ]);
+
+        // Create the event
+        $event = Event::create([
+            'organization_id' => $organization->organization_id,
+            'event_name' => $validated['event_name'],
+            'description' => $validated['description'],
+            'category' => $validated['category'],
+            'event_date' => $validated['event_date'],
+            'start_time' => $validated['start_time'],
+            'end_time' => $validated['end_time'],
+            'location' => $validated['location'],
+            'max_volunteers' => $validated['max_volunteers'],
+            'status' => $validated['status'] ?? 'open',
+            'registered_count' => 0
+        ]);
+
+        return redirect()->route('organization.dashboard')
+            ->with('success', 'Event "' . $event->event_name . '" created successfully!');
+    }
 }
