@@ -24,13 +24,13 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
         
-        // Content Security Policy - adjust based on your needs
+        // Content Security Policy - configured for Bootstrap and FontAwesome CDNs
         $csp = "default-src 'self'; " .
-               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com; " .
-               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " .
-               "font-src 'self' https://fonts.gstatic.com; " .
-               "img-src 'self' data: https:; " .
-               "connect-src 'self';";
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " .
+            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; " .
+            "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; " .
+            "img-src 'self' data: https:; " .
+            "connect-src 'self';";
         $response->headers->set('Content-Security-Policy', $csp);
 
         return $response;
