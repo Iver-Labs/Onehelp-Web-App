@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\SanitizeInput::class);
         
         // Set up rate limiting (disabled in testing environment)
-        if (!app()->environment('testing')) {
+        if (app()->environment() !== 'testing') {
             $middleware->throttleApi();
         }
         
@@ -86,7 +86,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (\Throwable $e, $request) {
-            if ($request->is('api/*') && !app()->environment('local')) {
+            if ($request->is('api/*') && app()->environment() !== 'local') {
                 return response()->json([
                     'success' => false,
                     'message' => 'An unexpected error occurred'
