@@ -91,10 +91,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/messages', [OrganizationController::class, 'messages'])->name('messages');
         Route::post('/messages/send', [OrganizationController::class, 'sendMessage'])->name('messages.send');
         
-        // Event routes (placeholder for now)
-        Route::get('/events/create', function() {
-            return view('organization.create-event');
-        })->name('events.create');
+        // Event routes
+        Route::get('/events/create', [OrganizationController::class, 'createEvent'])->name('events.create');
+        Route::post('/events/store', [OrganizationController::class, 'storeEvent'])->name('events.store');
     });
 
     // ===============================
