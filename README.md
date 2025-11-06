@@ -1,61 +1,221 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# OneHelp - Volunteer Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive volunteer management platform built with Laravel 12, connecting volunteers with organizations to make a positive impact in their communities.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **User Management**: Support for volunteers, organizations, and administrators
+- **Event Management**: Organizations can create and manage volunteer events
+- **Registration System**: Volunteers can browse and register for events
+- **Attendance Tracking**: Track volunteer hours and attendance
+- **Feedback System**: Collect feedback from volunteers
+- **Organization Verification**: Admin approval workflow for organizations
+- **Notifications**: Keep users informed of important updates
+- **Skills Tracking**: Match volunteers with events based on their skills
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Security Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+✅ **OWASP Compliant** - Implements OWASP Top 10 security best practices
+- Role-Based Access Control (RBAC)
+- Input validation and sanitization
+- XSS and SQL injection protection
+- CSRF protection
+- Security headers (CSP, X-Frame-Options, etc.)
+- Rate limiting
+- Comprehensive security logging
+- Session management
+- Password hashing (bcrypt)
 
-## Learning Laravel
+See [SECURITY.md](SECURITY.md) for detailed security documentation.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Quick Start
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Prerequisites
+- PHP 8.2 or higher
+- Composer
+- Node.js & NPM
+- SQLite (for development) or MariaDB/MySQL (for production)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Installation
 
-## Laravel Sponsors
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Onehelp-Web-App
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. **Install dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-### Premium Partners
+3. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+4. **Database setup**
+   ```bash
+   # For SQLite (development)
+   touch database/database.sqlite
+   
+   # Update .env
+   DB_CONNECTION=sqlite
+   DB_DATABASE=database/database.sqlite
+   
+   # Run migrations
+   php artisan migrate
+   ```
+
+5. **Seed demo data** (optional)
+   ```bash
+   php artisan db:seed --class=DemoDataSeeder
+   ```
+
+6. **Build frontend assets**
+   ```bash
+   npm run build
+   ```
+
+7. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
+
+Visit `http://localhost:8000` in your browser.
+
+### Demo Credentials
+
+After seeding demo data:
+- **Admin**: admin@onehelp.com / password123
+- **Volunteer**: john.volunteer@example.com / password123
+- **Organization**: contact@helpinghands.org / password123
+
+## Development
+
+### Running Tests
+```bash
+# Run all tests
+php artisan test
+
+# Run specific test suite
+php artisan test --filter Security
+
+# Run with coverage
+php artisan test --coverage
+```
+
+### Development Server with Hot Reload
+```bash
+# Runs server, queue worker, logs, and vite dev server
+composer run dev
+```
+
+### Code Style
+```bash
+# Format code with Laravel Pint
+./vendor/bin/pint
+```
+
+## Documentation
+
+- **[API Documentation](API_DOCUMENTATION.md)** - Complete API reference
+- **[Security Documentation](SECURITY.md)** - Security implementation details
+- **[Copilot Instructions](.github/copilot-instructions.md)** - AI assistant guidelines
+
+## Technology Stack
+
+- **Backend**: Laravel 12, PHP 8.2
+- **Frontend**: Blade Templates, Tailwind CSS, Vite
+- **Database**: SQLite (dev), MariaDB (production)
+- **Testing**: PHPUnit
+- **Authentication**: Laravel's built-in auth
+
+## Project Structure
+
+```
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/    # API and web controllers
+│   │   ├── Middleware/     # Security and custom middleware
+│   │   └── Requests/       # Form request validation
+│   ├── Models/             # Eloquent models
+│   └── Exceptions/         # Custom exceptions
+├── database/
+│   ├── migrations/         # Database migrations
+│   ├── factories/          # Model factories for testing
+│   └── seeders/            # Database seeders
+├── routes/
+│   ├── web.php            # Web routes
+│   └── api.php            # API routes
+├── tests/
+│   ├── Feature/           # Feature tests
+│   │   └── Security/      # Security tests
+│   └── Unit/              # Unit tests
+└── resources/
+    ├── views/             # Blade templates
+    ├── css/               # Stylesheets
+    └── js/                # JavaScript
+```
+
+## API Endpoints
+
+All API endpoints are prefixed with `/api`. See [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for complete details.
+
+**Public Endpoints:**
+- `GET /api/events` - List all events
+- `GET /api/events/{id}` - Get event details
+- `GET /api/skills` - List all skills
+
+**Protected Endpoints:** (require authentication)
+- `/api/users` - User management (admin only)
+- `/api/events` - Event CRUD (organizations)
+- `/api/registrations` - Event registrations (volunteers)
+- `/api/attendances` - Attendance tracking (organizations)
+- `/api/feedbacks` - Feedback system (volunteers)
+- `/api/notifications` - User notifications
+- `/api/verifications` - Organization verification (admin)
+
+## Testing
+
+The application includes comprehensive test coverage:
+
+- **29 tests** with 63 assertions
+- Authentication & authorization tests
+- Input validation tests
+- XSS & SQL injection prevention tests
+- RBAC tests
+
+Run tests with:
+```bash
+php artisan test
+```
+
+## Security
+
+This application implements OWASP Top 10 security best practices. See [SECURITY.md](SECURITY.md) for:
+- Security features overview
+- OWASP compliance details
+- Security testing procedures
+- Vulnerability disclosure process
+- Production security recommendations
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add/update tests
+5. Run security checks
+6. Submit a pull request
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Support
+
+For issues, questions, or contributions, please create an issue in the GitHub repository.
+
