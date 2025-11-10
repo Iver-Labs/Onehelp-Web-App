@@ -33,7 +33,7 @@
 
                             <div class="mb-4">
                                 <label class="form-label fw-bold" style="color: #1A4D5E;">Email Address</label>
-                                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required autofocus style="padding: 0.75rem; border: 2px solid #1A4D5E; border-radius: 10px;">
+                                <input type="email" name="email" autocomplete="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required autofocus style="padding: 0.75rem; border: 2px solid #1A4D5E; border-radius: 10px;">
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -41,7 +41,7 @@
 
                             <div class="mb-4">
                                 <label class="form-label fw-bold" style="color: #1A4D5E;">Password</label>
-                                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required style="padding: 0.75rem; border: 2px solid #1A4D5E; border-radius: 10px;">
+                                <input type="password" name="password" autocomplete="current-password" class="form-control @error('password') is-invalid @enderror" required style="padding: 0.75rem; border: 2px solid #1A4D5E; border-radius: 10px;">
                                 @error('password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

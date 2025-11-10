@@ -53,7 +53,7 @@
 
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Email Address *</label>
-                                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                                        <input type="email" name="email" autocomplete="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -62,14 +62,14 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label fw-bold">Password *</label>
-                                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                                            <input type="password" name="password" autocomplete="new-password" class="form-control @error('password') is-invalid @enderror" required>
                                             @error('password')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label fw-bold">Confirm Password *</label>
-                                            <input type="password" name="password_confirmation" class="form-control" required>
+                                            <input type="password" name="password_confirmation" autocomplete="new-password" class="form-control" required>
                                         </div>
                                     </div>
 
@@ -142,7 +142,7 @@
 
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Email Address *</label>
-                                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                                        <input type="email" name="email" autocomplete="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -151,14 +151,14 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label fw-bold">Password *</label>
-                                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                                            <input type="password" name="password" autocomplete="new-password" class="form-control @error('password') is-invalid @enderror" required>
                                             @error('password')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label fw-bold">Confirm Password *</label>
-                                            <input type="password" name="password_confirmation" class="form-control" required>
+                                            <input type="password" name="password_confirmation" autocomplete="new-password" class="form-control" required>
                                         </div>
                                     </div>
 
