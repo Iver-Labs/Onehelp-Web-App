@@ -12,12 +12,12 @@
         <!-- EVENT IMAGE -->
         <div class="col-md-5">
           <div class="event-image-frame">
-            @if ($event->images && count($event->images))
-              <img src="{{ asset($event->images[0]->image_url) }}" 
+            @if ($event->images && $event->images->isNotEmpty())
+              <img src="{{ asset($event->images->first()->image_url) }}" 
                    alt="{{ $event->event_name }}" 
                    class="event-image">
             @else
-              <img src="{{ asset('images/event-placeholder.jpg') }}" 
+              <img src="{{ asset('images/community_photo.jpg') }}" 
                    alt="{{ $event->event_name }}" 
                    class="event-image">
             @endif
@@ -29,7 +29,7 @@
           <h2 class="fw-bold text-navy mb-3">{{ $event->event_name }}</h2>
           <p class="text-muted mb-2">
             <i class="fas fa-building me-1"></i> 
-            {{ $event->organization->organization_name ?? 'Community Partner' }}
+            {{ $event->organization->org_name ?? 'Community Partner' }}
           </p>
           
           @if($event->category)
@@ -115,7 +115,7 @@
       </div>
 
       <!-- ADDITIONAL IMAGES -->
-      @if ($event->images && count($event->images) > 1)
+      @if ($event->images && $event->images->count() > 1)
       <div class="row mt-5 g-3">
         <h4 class="fw-bold text-navy mb-3">More Photos</h4>
         @foreach ($event->images as $image)
