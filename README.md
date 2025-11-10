@@ -86,6 +86,22 @@ See [SECURITY.md](SECURITY.md) for detailed security documentation.
 
 Visit `http://localhost:8000` in your browser.
 
+### Quick Setup for Demo/Video Presentation
+
+For a streamlined setup (especially useful for video presentations), use the automated setup scripts:
+
+**Linux/Mac:**
+```bash
+./setup-demo.sh
+```
+
+**Windows:**
+```bash
+setup-demo.bat
+```
+
+These scripts will automatically install dependencies, setup the database, seed demo data, and build assets.
+
 ### Demo Credentials
 
 After seeding demo data:
@@ -123,6 +139,9 @@ composer run dev
 
 - **[API Documentation](API_DOCUMENTATION.md)** - Complete API reference
 - **[Security Documentation](SECURITY.md)** - Security implementation details
+- **[Video Presentation Guide](VIDEO_PRESENTATION_GUIDE.md)** - Comprehensive guide for creating demo videos
+- **[Quick Reference Card](VIDEO_QUICK_REFERENCE.md)** - Printable quick reference for presenters
+- **[App Flow Diagrams](APP_FLOW_DIAGRAMS.md)** - Visual flow diagrams and user journey maps
 - **[Copilot Instructions](.github/copilot-instructions.md)** - AI assistant guidelines
 
 ## Technology Stack
