@@ -282,6 +282,7 @@ async function generateDescription() {
         
         const response = await fetch('/api/ai/generate-event-description', {
             method: 'POST',
+            credentials: 'same-origin', // Include cookies for session authentication
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',

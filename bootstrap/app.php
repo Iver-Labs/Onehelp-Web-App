@@ -22,6 +22,15 @@ return Application::configure(basePath: dirname(__DIR__))
         // Note: Environment check moved to runtime within middleware
         $middleware->throttleApi();
         
+        // Add session support to API routes for web-based API calls
+        $middleware->api(prepend: [
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+        ]);
+        
         // Register named middleware aliases
         $middleware->alias([
             'api.auth' => \App\Http\Middleware\ApiAuthMiddleware::class,
