@@ -86,6 +86,22 @@ See [SECURITY.md](SECURITY.md) for detailed security documentation.
 
 Visit `http://localhost:8000` in your browser.
 
+### Quick Setup for Demo/Video Presentation
+
+For a streamlined setup (especially useful for video presentations), use the automated setup scripts:
+
+**Linux/Mac:**
+```bash
+./setup-demo.sh
+```
+
+**Windows:**
+```bash
+setup-demo.bat
+```
+
+These scripts will automatically install dependencies, setup the database, seed demo data, and build assets.
+
 ### Demo Credentials
 
 After seeding demo data:
