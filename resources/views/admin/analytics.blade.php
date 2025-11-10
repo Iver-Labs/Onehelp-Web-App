@@ -79,7 +79,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
     // User Growth Chart
     const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
     new Chart(userGrowthCtx, {

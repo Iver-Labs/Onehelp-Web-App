@@ -159,7 +159,7 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
     // Event Trend Chart
     const eventTrendCtx = document.getElementById('eventTrendChart').getContext('2d');
     new Chart(eventTrendCtx, {

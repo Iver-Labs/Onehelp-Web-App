@@ -9,6 +9,20 @@
     <IfModule mod_headers.c>
         Header unset X-Powered-By
         Header always unset X-Powered-By
+        # Add security headers for static files
+        Header always set X-Content-Type-Options "nosniff"
+        Header always set X-Frame-Options "SAMEORIGIN"
+    </IfModule>
+    
+    # Disable PHP expose_php directive to prevent X-Powered-By header
+    <IfModule mod_php.c>
+        php_flag expose_php off
+    </IfModule>
+    <IfModule mod_php7.c>
+        php_flag expose_php off
+    </IfModule>
+    <IfModule mod_php8.c>
+        php_flag expose_php off
     </IfModule>
 
     # Handle Authorization Header
