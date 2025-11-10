@@ -6,6 +6,7 @@ A comprehensive volunteer management platform built with Laravel 12, connecting 
 
 - **User Management**: Support for volunteers, organizations, and administrators
 - **Event Management**: Organizations can create and manage volunteer events
+- **AI-Powered Descriptions**: ✨ NEW! Automatically generate compelling event descriptions with AI
 - **Registration System**: Volunteers can browse and register for events
 - **Attendance Tracking**: Track volunteer hours and attendance
 - **Feedback System**: Collect feedback from volunteers
@@ -138,6 +139,7 @@ composer run dev
 ## Documentation
 
 - **[API Documentation](API_DOCUMENTATION.md)** - Complete API reference
+- **[AI Feature Documentation](AI_FEATURE_DOCUMENTATION.md)** - ✨ AI-powered event description generator guide
 - **[Security Documentation](SECURITY.md)** - Security implementation details
 - **[Video Presentation Guide](VIDEO_PRESENTATION_GUIDE.md)** - Comprehensive guide for creating demo videos
 - **[Quick Reference Card](VIDEO_QUICK_REFERENCE.md)** - Printable quick reference for presenters
