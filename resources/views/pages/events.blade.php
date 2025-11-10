@@ -48,11 +48,11 @@
                 <div class="event-card shadow-sm"
                     style="flex: 1 1 calc(33.333% - 2rem); max-width: 360px; min-width: 280px;">
                 <div class="event-image">
-                    @if ($event->images && count($event->images))
-                    <img src="{{ asset($event->images[0]->image_url) }}" 
+                    @if ($event->images && $event->images->isNotEmpty())
+                    <img src="{{ asset($event->images->first()->image_url) }}" 
                         alt="{{ $event->event_name }}">
                     @else
-                    <img src="{{ asset('images/event-placeholder.jpg') }}" 
+                    <img src="{{ asset('images/community_photo.jpg') }}" 
                         alt="{{ $event->event_name }}">
                     @endif
                 </div>
