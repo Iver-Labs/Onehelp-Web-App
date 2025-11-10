@@ -74,6 +74,22 @@ class SecurityHeadersTest extends TestCase
     }
 
     /**
+     * Test that CSP uses nonces for script-src instead of unsafe-inline.
+     */
+    public function test_csp_uses_nonces_for_scripts(): void
+    {
+        $response = $this->get('/');
+
+        $csp = $response->headers->get('Content-Security-Policy');
+        
+        // CSP should include nonce for script-src
+        $this->assertStringContainsString('nonce-', $csp);
+        
+        // Verify nonce is in script-src directive
+        $this->assertMatchesRegularExpression("/script-src[^;]*'nonce-[A-Za-z0-9+\/=]+'/", $csp);
+    }
+
+    /**
      * Test security headers on API endpoints.
      */
     public function test_security_headers_on_api_endpoints(): void

@@ -115,7 +115,7 @@
     @endif
 </div>
 
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
 function filterApplications(status) {
     const rows = document.querySelectorAll('.application-row');
     const buttons = document.querySelectorAll('.filter-btn');
