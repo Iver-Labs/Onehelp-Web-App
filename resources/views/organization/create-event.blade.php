@@ -60,12 +60,10 @@
                     id="generateDescriptionBtn"
                     onclick="generateDescription()"
                     style="padding: 8px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2); display: flex; align-items: center; gap: 6px;"
-                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(102, 126, 234, 0.3)'"
+                    onmouseover="if(!this.disabled) { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(102, 126, 234, 0.3)'; }"
                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(102, 126, 234, 0.2)'"
                 >
-                    <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
+                    <i id="generateBtnIcon" class="fas fa-bolt" style="font-size: 14px;"></i>
                     <span id="generateBtnText">Generate with AI</span>
                 </button>
             </div>
@@ -266,22 +264,16 @@ async function generateDescription() {
     }
     
     const btn = document.getElementById('generateDescriptionBtn');
+    const btnIcon = document.getElementById('generateBtnIcon');
     const btnText = document.getElementById('generateBtnText');
     const descriptionField = document.getElementById('descriptionField');
     
-    // Update button state
+    // Show loading state
     btn.disabled = true;
     btn.style.opacity = '0.7';
     btn.style.cursor = 'not-allowed';
-    btnText.innerHTML = '<svg style="width: 16px; height: 16px; animation: spin 1s linear infinite;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/><path fill="currentColor" opacity="0.75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg> Generating...';
-    
-    // Add CSS for spin animation if not already present
-    if (!document.getElementById('spin-style')) {
-        const style = document.createElement('style');
-        style.id = 'spin-style';
-        style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-        document.head.appendChild(style);
-    }
+    btnIcon.className = 'fas fa-circle-notch fa-spin';
+    btnText.textContent = 'Generating...';
     
     try {
         // Get CSRF token
@@ -324,7 +316,8 @@ async function generateDescription() {
         btn.disabled = false;
         btn.style.opacity = '1';
         btn.style.cursor = 'pointer';
-        btnText.innerHTML = '<svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Generate with AI';
+        btnIcon.className = 'fas fa-bolt';
+        btnText.textContent = 'Generate with AI';
     }
 }
 
