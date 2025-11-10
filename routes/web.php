@@ -22,6 +22,8 @@ Route::view('/about', 'pages.about')->name('about');
 // Events Pages
 Route::get('/events', [EventPageController::class, 'index'])->name('events');
 Route::get('/events/{id}', [EventPageController::class, 'show'])->name('events.show');
+Route::post('/events/{id}/register', [EventPageController::class, 'register'])->name('events.register')->middleware('auth');
+
 
 // ===============================
 // AUTHENTICATION ROUTES

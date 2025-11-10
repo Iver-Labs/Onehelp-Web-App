@@ -27,10 +27,38 @@
         <!-- EVENT DETAILS -->
         <div class="col-md-7">
           <h2 class="fw-bold text-navy mb-3">{{ $event->event_name }}</h2>
-          <p class="text-muted mb-2">{{ $event->organization->org_name ?? 'Community Partner' }}</p>
+          <p class="text-muted mb-2">
+            <i class="fas fa-building me-1"></i> 
+            {{ $event->organization->organization_name ?? 'Community Partner' }}
+          </p>
+          
+          @if($event->category)
+            <p class="mb-2">
+              <span class="badge bg-info">{{ $event->category }}</span>
+              <span class="badge bg-{{ $event->status === 'open' ? 'success' : 'secondary' }}">
+                {{ ucfirst($event->status) }}
+              </span>
+            </p>
+          @endif
+          
           <p class="mb-2"><i class="far fa-calendar text-primary-teal"></i> {{ \Carbon\Carbon::parse($event->event_date)->format('F d, Y') }}</p>
-          <p class="mb-2"><i class="far fa-clock text-primary-teal"></i> {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} - {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }}</p>
+          <p class="mb-2"><i class="far fa-clock text-primary-teal"></i> {{ $event->start_time }} - {{ $event->end_time }}</p>
           <p class="mb-3"><i class="fas fa-map-marker-alt text-primary-teal"></i> {{ $event->location }}</p>
+          
+          <div class="mb-3">
+            <p class="mb-1"><strong>Volunteer Spots:</strong></p>
+            <div class="d-flex align-items-center">
+              <div class="progress flex-grow-1 me-2" style="height: 20px;">
+                <div class="progress-bar bg-success" role="progressbar" 
+                     style="width: {{ $event->max_volunteers > 0 ? ($event->registered_count / $event->max_volunteers * 100) : 0 }}%">
+                  {{ $event->registered_count }}/{{ $event->max_volunteers }}
+                </div>
+              </div>
+              <span class="text-muted small">
+                {{ max(0, $event->max_volunteers - $event->registered_count) }} spots left
+              </span>
+            </div>
+          </div>
 
           @if (!empty($event->long_description))
           <div class="event-long-description mt-3">
@@ -40,7 +68,49 @@
           <p class="lead text-secondary">{{ $event->description }}</p>
           @endif
 
-          <a href="#" class="btn-view-details mt-4">Join Event</a>
+          <!-- Registration Button -->
+          <div class="mt-4">
+            @auth
+              @if(auth()->user()->user_type === 'volunteer')
+                @if($isRegistered)
+                  @if($userRegistration->status === 'pending')
+                    <button class="btn btn-warning btn-lg" disabled>
+                      <i class="fas fa-clock"></i> Application Pending
+                    </button>
+                  @elseif($userRegistration->status === 'approved')
+                    <button class="btn btn-success btn-lg" disabled>
+                      <i class="fas fa-check-circle"></i> Registered
+                    </button>
+                  @else
+                    <button class="btn btn-danger btn-lg" disabled>
+                      <i class="fas fa-times-circle"></i> Application Rejected
+                    </button>
+                  @endif
+                @else
+                  @if($event->status === 'open' && $event->registered_count < $event->max_volunteers)
+                    <form method="POST" action="{{ route('events.register', $event->event_id) }}">
+                      @csrf
+                      <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus"></i> Apply for This Event
+                      </button>
+                    </form>
+                  @else
+                    <button class="btn btn-secondary btn-lg" disabled>
+                      Event Full or Closed
+                    </button>
+                  @endif
+                @endif
+              @else
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> Only volunteers can register for events.
+                </div>
+              @endif
+            @else
+              <a href="{{ route('login') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-sign-in-alt"></i> Login to Apply
+              </a>
+            @endauth
+          </div>
         </div>
       </div>
 
