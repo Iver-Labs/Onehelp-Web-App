@@ -29,7 +29,7 @@
           <h2 class="fw-bold text-navy mb-3">{{ $event->event_name }}</h2>
           <p class="text-muted mb-2">
             <i class="fas fa-building me-1"></i> 
-            {{ $event->organization->organization_name ?? 'Community Partner' }}
+            {{ $event->organization->org_name ?? 'Community Partner' }}
           </p>
           
           @if($event->category)
