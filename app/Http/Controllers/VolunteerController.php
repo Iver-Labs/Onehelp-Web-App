@@ -140,11 +140,31 @@ class VolunteerController extends Controller
     /**
      * Display events page
      */
-    public function events()
+    public function events(Request $request)
     {
-        // TODO: Implement events listing page
-        return view('volunteer.events');
+        $query = \App\Models\Event::with(['organization', 'primaryImage'])
+            ->where('status', 'open')
+            ->where('event_date', '>=', now());
+
+        // Filter by category
+        if ($request->has('category') && $request->category) {
+            $query->where('category', $request->category);
+        }
+
+        // Search
+        if ($request->has('search') && $request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('event_name', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%')
+                  ->orWhere('location', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $events = $query->orderBy('event_date', 'asc')->paginate(12);
+
+        return view('volunteer.events', compact('events'));
     }
+
     public function profile()
     {
         $user = Auth::user();

@@ -22,6 +22,8 @@ Route::view('/about', 'pages.about')->name('about');
 // Events Pages
 Route::get('/events', [EventPageController::class, 'index'])->name('events');
 Route::get('/events/{id}', [EventPageController::class, 'show'])->name('events.show');
+Route::post('/events/{id}/register', [EventPageController::class, 'register'])->name('events.register')->middleware('auth');
+
 
 // ===============================
 // AUTHENTICATION ROUTES
@@ -97,11 +99,36 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // ===============================
-    // ADMIN ROUTES (Placeholder)
+    // ADMIN ROUTES
     // ===============================
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+    Route::prefix('admin')->name('admin.')->middleware('can:admin')->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users');
+        Route::get('/organizations', [\App\Http\Controllers\AdminController::class, 'organizations'])->name('organizations');
+        Route::get('/events', [\App\Http\Controllers\AdminController::class, 'events'])->name('events');
+        Route::get('/verifications', [\App\Http\Controllers\AdminController::class, 'verifications'])->name('verifications');
+        Route::put('/verifications/{id}', [\App\Http\Controllers\AdminController::class, 'updateVerification'])->name('verifications.update');
+        Route::post('/users/{id}/toggle-status', [\App\Http\Controllers\AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
+        Route::delete('/users/{id}', [\App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');
+        Route::get('/analytics', [\App\Http\Controllers\AdminController::class, 'analytics'])->name('analytics');
+    });
+
+    // ===============================
+    // REPORT ROUTES
+    // ===============================
+    Route::prefix('reports')->name('reports.')->middleware('auth')->group(function () {
+        // PDF Reports
+        Route::get('/volunteer/{volunteerId}/activity', [\App\Http\Controllers\ReportController::class, 'volunteerActivityReport'])->name('volunteer.activity');
+        Route::get('/event/{eventId}/participation', [\App\Http\Controllers\ReportController::class, 'eventParticipationReport'])->name('event.participation');
+        Route::get('/organization/{organizationId}/summary', [\App\Http\Controllers\ReportController::class, 'organizationSummaryReport'])->name('organization.summary');
+        Route::get('/system/summary', [\App\Http\Controllers\ReportController::class, 'systemSummaryReport'])->name('system.summary')->middleware('can:admin');
+        
+        // Excel Exports
+        Route::get('/export/users', [\App\Http\Controllers\ReportController::class, 'exportUsers'])->name('export.users')->middleware('can:admin');
+        Route::get('/export/events', [\App\Http\Controllers\ReportController::class, 'exportEvents'])->name('export.events');
+        Route::get('/export/registrations', [\App\Http\Controllers\ReportController::class, 'exportRegistrations'])->name('export.registrations');
+        
+        // Certificate
+        Route::get('/certificate/{registrationId}', [\App\Http\Controllers\ReportController::class, 'volunteerCertificate'])->name('certificate');
     });
 });
