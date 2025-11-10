@@ -51,17 +51,36 @@
 
         <!-- Description -->
         <div style="margin-bottom: 20px;">
-            <label style="display: block; font-size: 14px; font-weight: 600; color: #2C3E50; margin-bottom: 8px;">
-                Description
-            </label>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; color: #2C3E50;">
+                    Description
+                </label>
+                <button 
+                    type="button"
+                    id="generateDescriptionBtn"
+                    onclick="generateDescription()"
+                    style="padding: 8px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2); display: flex; align-items: center; gap: 6px;"
+                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(102, 126, 234, 0.3)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(102, 126, 234, 0.2)'"
+                >
+                    <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    <span id="generateBtnText">Generate with AI</span>
+                </button>
+            </div>
             <textarea 
+                id="descriptionField"
                 name="description" 
-                rows="4"
+                rows="6"
                 style="width: 100%; padding: 12px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 14px; color: #2C3E50; transition: all 0.2s; resize: vertical;"
-                placeholder="Describe the event, its purpose, and what volunteers will do"
+                placeholder="Describe the event, its purpose, and what volunteers will do. Or use AI to generate a compelling description!"
                 onfocus="this.style.borderColor='#7CB5B3'" 
                 onblur="this.style.borderColor='#E5E7EB'"
             >{{ old('description') }}</textarea>
+            <p style="font-size: 12px; color: #6B7280; margin-top: 6px;">
+                💡 <strong>Tip:</strong> Fill in the event name, category, and location first, then click "Generate with AI" to create a compelling description automatically!
+            </p>
         </div>
 
         <!-- Event Image -->
@@ -232,4 +251,116 @@
         </div>
     </form>
 </div>
+
+<script>
+async function generateDescription() {
+    const eventName = document.querySelector('input[name="event_name"]').value;
+    const category = document.querySelector('select[name="category"]').value;
+    const location = document.querySelector('input[name="location"]').value;
+    
+    // Validate required fields
+    if (!eventName.trim()) {
+        alert('Please enter an event name first!');
+        document.querySelector('input[name="event_name"]').focus();
+        return;
+    }
+    
+    const btn = document.getElementById('generateDescriptionBtn');
+    const btnText = document.getElementById('generateBtnText');
+    const descriptionField = document.getElementById('descriptionField');
+    
+    // Update button state
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    btn.style.cursor = 'not-allowed';
+    btnText.innerHTML = '<svg style="width: 16px; height: 16px; animation: spin 1s linear infinite;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/><path fill="currentColor" opacity="0.75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg> Generating...';
+    
+    // Add CSS for spin animation if not already present
+    if (!document.getElementById('spin-style')) {
+        const style = document.createElement('style');
+        style.id = 'spin-style';
+        style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
+        document.head.appendChild(style);
+    }
+    
+    try {
+        // Get CSRF token
+        const csrfToken = document.querySelector('meta[name="csrf-token"]') || 
+                         document.querySelector('input[name="_token"]');
+        
+        const response = await fetch('/api/ai/generate-event-description', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken ? csrfToken.content || csrfToken.value : ''
+            },
+            body: JSON.stringify({
+                event_name: eventName,
+                category: category,
+                location: location
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            descriptionField.value = data.description;
+            descriptionField.style.borderColor = '#10B981';
+            setTimeout(() => {
+                descriptionField.style.borderColor = '#E5E7EB';
+            }, 2000);
+            
+            // Show success feedback
+            showNotification('✨ Description generated successfully!', 'success');
+        } else {
+            showNotification('❌ ' + (data.message || 'Failed to generate description'), 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('❌ An error occurred. Please try again.', 'error');
+    } finally {
+        // Reset button state
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        btnText.innerHTML = '<svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Generate with AI';
+    }
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 9999;
+        animation: slideIn 0.3s ease-out;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        ${type === 'success' 
+            ? 'background: #D1FAE5; color: #065F46; border-left: 4px solid #10B981;' 
+            : 'background: #FEE2E2; color: #991B1B; border-left: 4px solid #EF4444;'}
+    `;
+    notification.textContent = message;
+    
+    // Add animation style
+    if (!document.getElementById('notification-style')) {
+        const style = document.createElement('style');
+        style.id = 'notification-style';
+        style.textContent = '@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }';
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+</script>
 @endsection
