@@ -58,8 +58,39 @@ X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: geolocation=(), microphone=(), camera=()
-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com; ...
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none';
 ```
+
+#### Content Security Policy (CSP)
+The CSP includes the following directives:
+- `default-src 'self'` - Only allow resources from the same origin by default
+- `script-src` - Allow scripts from self and trusted CDNs (jsdelivr, cloudflare)
+- `style-src` - Allow styles from self and trusted CDNs + Google Fonts
+- `font-src` - Allow fonts from self and trusted CDNs
+- `img-src` - Allow images from self, data URIs, and trusted CDNs (not wildcard https)
+- `connect-src 'self'` - Only allow AJAX/fetch/WebSocket to same origin
+- `frame-ancestors 'self'` - Only allow embedding in same-origin frames (prevents clickjacking)
+- `form-action 'self'` - Only allow form submissions to same origin
+- `base-uri 'self'` - Restrict base tag to same origin
+- `object-src 'none'` - Block all plugins (Flash, Java, etc.)
+
+**Note on unsafe-inline**: Currently allows inline scripts/styles to maintain compatibility with existing templates. For enhanced security, consider migrating to external script files and using CSP nonces.
+
+**Note on unsafe-eval**: Removed from script-src for better security (blocks eval, Function constructor, etc.)
+
+#### X-Powered-By Header Suppression
+The application attempts to suppress the `X-Powered-By` header to prevent server version disclosure:
+- Via Apache/Nginx: Headers are removed in `.htaccess` using `Header unset X-Powered-By`
+- Via middleware: `$response->headers->remove('X-Powered-By')`
+- PHP configuration: Set `expose_php = Off` in php.ini for production
+
+**Note**: PHP's built-in development server (`php artisan serve`) adds this header at a low level and cannot remove it. In production with Apache/Nginx, the header will be properly removed.
+
+#### Session Cookies Security
+All session cookies are configured with security flags:
+- `HttpOnly` flag set to prevent JavaScript access (mitigates XSS cookie theft)
+- `SameSite=lax` to prevent CSRF attacks
+- `Secure` flag should be enabled in production when using HTTPS
 
 ### 4. CSRF Protection
 
