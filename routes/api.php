@@ -11,7 +11,8 @@ use App\Http\Controllers\{
     AttendanceController,
     NotificationController,
     FeedbackController,
-    OrganizationVerificationController
+    OrganizationVerificationController,
+    AIAssistantController
 };
 
 /*
@@ -57,6 +58,9 @@ Route::middleware(['api.auth'])->group(function () {
     Route::apiResource('notifications', NotificationController::class);
     Route::apiResource('feedbacks', FeedbackController::class);
     Route::apiResource('verifications', OrganizationVerificationController::class);
+    
+    // AI Assistant routes
+    Route::post('/ai/generate-event-description', [AIAssistantController::class, 'generateEventDescription']);
     
     // Optional custom routes
     Route::get('/organizations/{organization}/events', [OrganizationController::class, 'show']);
