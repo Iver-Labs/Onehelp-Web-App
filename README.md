@@ -123,6 +123,9 @@ composer run dev
 
 - **[API Documentation](API_DOCUMENTATION.md)** - Complete API reference
 - **[Security Documentation](SECURITY.md)** - Security implementation details
+- **[Video Presentation Guide](VIDEO_PRESENTATION_GUIDE.md)** - Comprehensive guide for creating demo videos
+- **[Quick Reference Card](VIDEO_QUICK_REFERENCE.md)** - Printable quick reference for presenters
+- **[App Flow Diagrams](APP_FLOW_DIAGRAMS.md)** - Visual flow diagrams and user journey maps
 - **[Copilot Instructions](.github/copilot-instructions.md)** - AI assistant guidelines
 
 ## Technology Stack
