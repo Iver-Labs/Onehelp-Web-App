@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Events Hero -->
-<section class="hero-section" style="min-height: 400px;">
+<section class="hero-section" style="background: linear-gradient(rgba(28, 77, 94, 0.6), rgba(28, 77, 94, 0.6)), url('{{ asset('images/community_photo.jpg') }}') center/cover; min-height: 400px;">
     <div class="hero-content">
         <h1>Volunteer Events</h1>
         <p>Find opportunities to make a difference in your community</p>
