@@ -4,6 +4,12 @@
     </IfModule>
 
     RewriteEngine On
+    
+    # Hide PHP version and server information
+    <IfModule mod_headers.c>
+        Header unset X-Powered-By
+        Header always unset X-Powered-By
+    </IfModule>
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
