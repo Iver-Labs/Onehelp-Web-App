@@ -9,7 +9,14 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $events = Event::latest()->take(4)->get(); // Fetch 4 latest events
+        // Fetch 4 latest events with organization and images relationships
+        $events = Event::with(['organization', 'images'])
+            ->where('status', 'open')
+            ->where('event_date', '>=', now())
+            ->latest()
+            ->take(4)
+            ->get();
+            
         return view('pages.home', compact('events'));
     }
 }
