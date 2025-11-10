@@ -281,10 +281,66 @@ class OrganizationController extends Controller
             return redirect()->route('home')->with('error', 'Organization profile not found.');
         }
         
+        // Calculate statistics
+        $stats = $this->getOrganizationStats($organization->organization_id);
+        $stats['avgRating'] = 4.5; // TODO: Calculate from feedback when implemented
+        
+        // Get chart data
+        $chartData = $this->getAnalyticsChartData($organization->organization_id);
+        
+        // Get recent events for the table
+        $recentEvents = Event::where('organization_id', $organization->organization_id)
+            ->orderBy('event_date', 'desc')
+            ->take(10)
+            ->get();
+        
         $this->sharePendingCount($organization->organization_id);
         
-        return view('organization.analytics', compact('organization'));
+        return view('organization.analytics', compact('organization', 'stats', 'chartData', 'recentEvents'));
     }
+
+    /**
+     * Get analytics chart data
+     */
+    private function getAnalyticsChartData($organizationId)
+    {
+        $months = [];
+        $eventCounts = [];
+        $registrationCounts = [];
+
+        // Last 6 months data
+        for ($i = 5; $i >= 0; $i--) {
+            $date = Carbon::now()->subMonths($i);
+            $months[] = $date->format('M');
+            
+            $eventCounts[] = Event::where('organization_id', $organizationId)
+                ->whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+                
+            $registrationCounts[] = EventRegistration::whereHas('event', function($query) use ($organizationId) {
+                $query->where('organization_id', $organizationId);
+            })
+            ->whereYear('created_at', $date->year)
+            ->whereMonth('created_at', $date->month)
+            ->count();
+        }
+
+        // Event status counts
+        $statusCounts = [
+            'open' => Event::where('organization_id', $organizationId)->where('status', 'open')->count(),
+            'closed' => Event::where('organization_id', $organizationId)->where('status', 'closed')->count(),
+            'cancelled' => Event::where('organization_id', $organizationId)->where('status', 'cancelled')->count(),
+        ];
+
+        return [
+            'months' => $months,
+            'eventCounts' => $eventCounts,
+            'registrationCounts' => $registrationCounts,
+            'statusCounts' => $statusCounts
+        ];
+    }
+
 
     /**
      * Send a message from the organization
