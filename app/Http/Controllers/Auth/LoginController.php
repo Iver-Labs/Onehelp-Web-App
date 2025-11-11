@@ -42,10 +42,21 @@ class LoginController extends Controller
             // Check if account is active
             if (!$user->is_active) {
                 Auth::logout();
+                \Log::channel('security')->warning('Inactive account login attempt', [
+                    'email' => $credentials['email'],
+                    'ip' => $request->ip()
+                ]);
                 return back()->withErrors([
                     'email' => 'Your account has been deactivated. Please contact support.',
                 ]);
             }
+
+            // Log successful login
+            \Log::channel('security')->info('User logged in successfully', [
+                'user_id' => $user->user_id,
+                'email' => $user->email,
+                'ip' => $request->ip()
+            ]);
 
             // Update last login
             $user->updateLastLogin();
@@ -59,6 +70,12 @@ class LoginController extends Controller
                 return redirect()->intended('/');
             }
         }
+
+        // Log failed login attempt
+        \Log::channel('security')->warning('Failed login attempt', [
+            'email' => $credentials['email'],
+            'ip' => $request->ip()
+        ]);
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',

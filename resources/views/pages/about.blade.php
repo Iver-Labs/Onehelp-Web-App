@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- About Hero -->
-<section class="hero-section" style="min-height: 400px;">
+<section class="hero-section" style="background: linear-gradient(rgba(28, 77, 94, 0.6), rgba(28, 77, 94, 0.6)), url('{{ asset('images/community_photo.jpg') }}') center/cover; min-height: 400px;">
     <div class="hero-content">
         <h1>About OneHelp</h1>
         <p>Building Bridges Between Hearts and Communities</p>
@@ -42,7 +42,7 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6 mb-4 mb-md-0">
-                <img src="https://via.placeholder.com/600x400/7DD3C0/1A4D5E?text=Our+Story" alt="Our Story" style="width: 100%; border-radius: 20px; border: 3px solid var(--navy);">
+                <img src="{{ asset('images/community_photo.jpg') }}" alt="Our Story" style="width: 100%; border-radius: 20px; border: 3px solid var(--navy);">
             </div>
             <div class="col-md-6">
                 <h2 style="color: var(--navy); font-size: 2.5rem; font-weight: 700; margin-bottom: 2rem;">Our Story</h2>

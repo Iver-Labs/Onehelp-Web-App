@@ -138,7 +138,7 @@
     </div>
 </div>
 
-<script>
+<script nonce="{{ $cspNonce ?? '' }}">
 function openChangePasswordModal() {
     document.getElementById('changePasswordModal').style.display = 'flex';
 }
