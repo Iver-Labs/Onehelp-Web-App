@@ -11,7 +11,7 @@ class Event extends Model
 
     protected $primaryKey = 'event_id';
     protected $fillable = [
-        'organization_id', 'event_name', 'description', 'category',
+        'organization_id', 'event_name', 'description', 'long_description', 'category',
         'event_date', 'start_time', 'end_time', 'location',
         'max_volunteers', 'registered_count', 'status'
     ];
@@ -32,5 +32,9 @@ class Event extends Model
 
     public function images() {
         return $this->hasMany(EventImage::class, 'event_id');
+    }
+
+    public function primaryImage() {
+        return $this->hasOne(EventImage::class, 'event_id')->where('is_primary', true);
     }
 }

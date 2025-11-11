@@ -1,8 +1,8 @@
 <aside class="sidebar">
     <!-- Logo -->
-    <div class="sidebar-logo">
+    <a href="{{ url('/') }}" class="sidebar-logo" style="text-decoration: none; cursor: pointer;">
         <img src="{{ asset('/images/Onehelp-dark-logo.svg') }}" alt="Logo">
-    </div>
+    </a>
 
     <!-- Profile Card -->
     <div class="sidebar-profile">

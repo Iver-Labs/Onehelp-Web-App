@@ -34,6 +34,16 @@ class Organization extends Model
         'rating' => 'decimal:2'
     ];
 
+    protected $appends = ['organization_name'];
+
+    /**
+     * Accessor for organization_name (alias for org_name)
+     */
+    public function getOrganizationNameAttribute()
+    {
+        return $this->org_name;
+    }
+
     /**
      * Get the user that owns the organization
      */

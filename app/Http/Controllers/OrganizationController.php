@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Organization;
 use App\Models\Event;
 use App\Models\EventRegistration;
+use App\Models\EventImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Message;
@@ -279,10 +281,66 @@ class OrganizationController extends Controller
             return redirect()->route('home')->with('error', 'Organization profile not found.');
         }
         
+        // Calculate statistics
+        $stats = $this->getOrganizationStats($organization->organization_id);
+        $stats['avgRating'] = 4.5; // TODO: Calculate from feedback when implemented
+        
+        // Get chart data
+        $chartData = $this->getAnalyticsChartData($organization->organization_id);
+        
+        // Get recent events for the table
+        $recentEvents = Event::where('organization_id', $organization->organization_id)
+            ->orderBy('event_date', 'desc')
+            ->take(10)
+            ->get();
+        
         $this->sharePendingCount($organization->organization_id);
         
-        return view('organization.analytics', compact('organization'));
+        return view('organization.analytics', compact('organization', 'stats', 'chartData', 'recentEvents'));
     }
+
+    /**
+     * Get analytics chart data
+     */
+    private function getAnalyticsChartData($organizationId)
+    {
+        $months = [];
+        $eventCounts = [];
+        $registrationCounts = [];
+
+        // Last 6 months data
+        for ($i = 5; $i >= 0; $i--) {
+            $date = Carbon::now()->subMonths($i);
+            $months[] = $date->format('M');
+            
+            $eventCounts[] = Event::where('organization_id', $organizationId)
+                ->whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+                
+            $registrationCounts[] = EventRegistration::whereHas('event', function($query) use ($organizationId) {
+                $query->where('organization_id', $organizationId);
+            })
+            ->whereYear('created_at', $date->year)
+            ->whereMonth('created_at', $date->month)
+            ->count();
+        }
+
+        // Event status counts
+        $statusCounts = [
+            'open' => Event::where('organization_id', $organizationId)->where('status', 'open')->count(),
+            'closed' => Event::where('organization_id', $organizationId)->where('status', 'closed')->count(),
+            'cancelled' => Event::where('organization_id', $organizationId)->where('status', 'cancelled')->count(),
+        ];
+
+        return [
+            'months' => $months,
+            'eventCounts' => $eventCounts,
+            'registrationCounts' => $registrationCounts,
+            'statusCounts' => $statusCounts
+        ];
+    }
+
 
     /**
      * Send a message from the organization
@@ -428,7 +486,8 @@ class OrganizationController extends Controller
             'end_time' => 'required|date_format:H:i',
             'location' => 'required|string|max:255',
             'max_volunteers' => 'required|integer|min:1',
-            'status' => 'nullable|string|in:open,closed,cancelled'
+            'status' => 'nullable|string|in:open,closed,cancelled',
+            'event_image' => 'required|image|mimes:jpeg,jpg,png|max:2048'
         ]);
 
         // Additional validation: end_time must be after start_time
@@ -449,6 +508,18 @@ class OrganizationController extends Controller
             'max_volunteers' => $validated['max_volunteers'],
             'status' => $validated['status'] ?? 'open',
             'registered_count' => 0
+        ]);
+
+        // Handle image upload (validation ensures file exists)
+        $image = $request->file('event_image');
+        $imagePath = $image->store('events', 'public');
+        
+        // Create event image record
+        EventImage::create([
+            'event_id' => $event->event_id,
+            'image_url' => 'storage/' . $imagePath,
+            'is_primary' => true,
+            'uploaded_at' => now()
         ]);
 
         return redirect()->route('organization.dashboard')

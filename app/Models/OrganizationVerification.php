@@ -11,8 +11,8 @@ class OrganizationVerification extends Model
 
     protected $primaryKey = 'verification_id';
     protected $fillable = [
-        'organization_id', 'document_type', 'document_url', 'verification_status',
-        'admin_notes', 'submitted_at', 'reviewed_at'
+        'organization_id', 'document_type', 'document_url', 'status',
+        'admin_notes', 'submitted_at', 'reviewed_at', 'verified_by', 'verified_at'
     ];
 
     public $timestamps = false;

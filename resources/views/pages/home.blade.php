@@ -58,7 +58,33 @@
     <div class="container">
         <h2>FEATURED VOLUNTEER EVENTS</h2>
         <div class="row g-4">
-            <!-- Event Card 1 -->
+            @forelse($events as $event)
+            <div class="col-md-6 col-lg-3">
+                <div class="event-card">
+                    <div class="event-image">
+                        @if($event->images && $event->images->isNotEmpty())
+                            <img src="{{ asset($event->images->first()->image_url) }}" alt="{{ $event->event_name }}">
+                        @else
+                            <img src="{{ asset('images/community_photo.jpg') }}" alt="{{ $event->event_name }}">
+                        @endif
+                    </div>
+                    <div class="event-content">
+                        <h3 class="event-title">{{ $event->event_name }}</h3>
+                        <p class="event-org">{{ $event->organization->org_name ?? 'Community Partner' }}</p>
+                        <p class="event-description">{{ Str::limit($event->description, 150) }}</p>
+                        <div class="event-meta">
+                            <span><i class="far fa-calendar"></i> {{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}</span>
+                            <span><i class="far fa-clock"></i> {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }}</span>
+                        </div>
+                        <div class="event-tags">
+                            <span class="event-tag">{{ $event->category }}</span>
+                        </div>
+                        <a href="{{ url('/events/' . $event->event_id) }}" class="btn-view-details">View Details</a>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <!-- Fallback to default events if no events in database -->
             <div class="col-md-6 col-lg-3">
                 <div class="event-card">
                     <div class="event-image">
@@ -80,8 +106,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Event Card 2 -->
             <div class="col-md-6 col-lg-3">
                 <div class="event-card">
                     <div class="event-image">
@@ -103,8 +127,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Event Card 3 -->
             <div class="col-md-6 col-lg-3">
                 <div class="event-card">
                     <div class="event-image">
@@ -126,8 +148,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Event Card 4 -->
             <div class="col-md-6 col-lg-3">
                 <div class="event-card">
                     <div class="event-image">
@@ -149,6 +169,7 @@
                     </div>
                 </div>
             </div>
+            @endforelse
         </div>
     </div>
 </section>

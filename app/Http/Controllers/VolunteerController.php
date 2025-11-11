@@ -142,6 +142,7 @@ class VolunteerController extends Controller
      */
     public function events(Request $request)
     {
+<<<<<<< HEAD
         $query = \App\Models\Event::with(['organization', 'skills', 'images']);
 
         // Search
@@ -177,7 +178,31 @@ class VolunteerController extends Controller
         $skills = \App\Models\Skill::all();
 
         return view('volunteer.events', compact('events', 'locations', 'skills'));
+=======
+        $query = \App\Models\Event::with(['organization', 'primaryImage'])
+            ->where('status', 'open')
+            ->where('event_date', '>=', now());
+
+        // Filter by category
+        if ($request->has('category') && $request->category) {
+            $query->where('category', $request->category);
+        }
+
+        // Search
+        if ($request->has('search') && $request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('event_name', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%')
+                  ->orWhere('location', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $events = $query->orderBy('event_date', 'asc')->paginate(12);
+
+        return view('volunteer.events', compact('events'));
+>>>>>>> bf643605715377de91547a4649aed863af0a426c
     }
+
     public function profile()
     {
         $user = Auth::user();

@@ -15,7 +15,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Clear existing data
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $driver = DB::getDriverName();
+        
+        if ($driver === 'mysql' || $driver === 'mariadb') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        } elseif ($driver === 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = OFF;');
+        }
+        
         DB::table('messages')->truncate();
         DB::table('event_registrations')->truncate();
         DB::table('events')->truncate();
@@ -23,7 +30,12 @@ class DatabaseSeeder extends Seeder
         DB::table('organizations')->truncate();
         DB::table('users')->truncate();
         DB::table('skills')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
+        if ($driver === 'mysql' || $driver === 'mariadb') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        } elseif ($driver === 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = ON;');
+        }
 
         // Seed in order of dependencies
         $this->seedSkills();

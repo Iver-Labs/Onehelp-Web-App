@@ -11,7 +11,8 @@ use App\Http\Controllers\{
     AttendanceController,
     NotificationController,
     FeedbackController,
-    OrganizationVerificationController
+    OrganizationVerificationController,
+    AIAssistantController
 };
 
 /*
@@ -23,18 +24,45 @@ use App\Http\Controllers\{
 |--------------------------------------------------------------------------
 */
 
-Route::apiResource('users', UserController::class);
-Route::apiResource('volunteers', VolunteerController::class);
-Route::apiResource('organizations', OrganizationController::class);
-Route::apiResource('events', EventController::class);
-Route::apiResource('registrations', EventRegistrationController::class);
-Route::apiResource('skills', SkillController::class);
-Route::apiResource('attendances', AttendanceController::class);
-Route::apiResource('notifications', NotificationController::class);
-Route::apiResource('feedbacks', FeedbackController::class);
-Route::apiResource('verifications', OrganizationVerificationController::class);
+// Public API routes (no auth required)
+Route::get('/events', [EventController::class, 'index']);
+Route::get('/events/{id}', [EventController::class, 'show']);
+Route::get('/skills', [SkillController::class, 'index']);
+Route::get('/skills/{id}', [SkillController::class, 'show']);
 
-// Optional custom routes
-Route::post('/events/{event}/register', [EventRegistrationController::class, 'store']);
-Route::get('/organizations/{organization}/events', [OrganizationController::class, 'show']);
-Route::get('/volunteers/{volunteer}/registrations', [VolunteerController::class, 'show']);
+// Protected API routes (require authentication)
+Route::middleware(['api.auth'])->group(function () {
+    // User routes
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('volunteers', VolunteerController::class);
+    Route::apiResource('organizations', OrganizationController::class);
+    
+    // Event routes (except public ones already defined above)
+    Route::post('/events', [EventController::class, 'store']);
+    Route::put('/events/{id}', [EventController::class, 'update']);
+    Route::patch('/events/{id}', [EventController::class, 'update']);
+    Route::delete('/events/{id}', [EventController::class, 'destroy']);
+    
+    // Event registration routes
+    Route::apiResource('registrations', EventRegistrationController::class);
+    Route::post('/events/{event}/register', [EventRegistrationController::class, 'store']);
+    
+    // Skill management routes (modify/create)
+    Route::post('/skills', [SkillController::class, 'store']);
+    Route::put('/skills/{id}', [SkillController::class, 'update']);
+    Route::patch('/skills/{id}', [SkillController::class, 'update']);
+    Route::delete('/skills/{id}', [SkillController::class, 'destroy']);
+    
+    // Other protected resources
+    Route::apiResource('attendances', AttendanceController::class);
+    Route::apiResource('notifications', NotificationController::class);
+    Route::apiResource('feedbacks', FeedbackController::class);
+    Route::apiResource('verifications', OrganizationVerificationController::class);
+    
+    // AI Assistant routes
+    Route::post('/ai/generate-event-description', [AIAssistantController::class, 'generateEventDescription']);
+    
+    // Optional custom routes
+    Route::get('/organizations/{organization}/events', [OrganizationController::class, 'show']);
+    Route::get('/volunteers/{volunteer}/registrations', [VolunteerController::class, 'show']);
+});
