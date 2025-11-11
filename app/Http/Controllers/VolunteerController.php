@@ -140,10 +140,43 @@ class VolunteerController extends Controller
     /**
      * Display events page
      */
-    public function events()
+    public function events(Request $request)
     {
-        // TODO: Implement events listing page
-        return view('volunteer.events');
+        $query = \App\Models\Event::with(['organization', 'skills', 'images']);
+
+        // Search
+        if ($request->filled('search')) {
+            $query->where('event_name', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter by location
+        if ($request->filled('location')) {
+            $query->where('location', $request->location);
+        }
+
+        // Filter by skill (category)
+        if ($request->filled('skill')) {
+            $query->whereHas('skills', function ($q) use ($request) {
+                $q->where('skills.skill_id', $request->skill);
+            });
+        }
+
+        // Sorting
+        if ($request->filled('sort')) {
+            if ($request->sort == 'date_asc') {
+                $query->orderBy('event_date', 'asc');
+            } elseif ($request->sort == 'date_desc') {
+                $query->orderBy('event_date', 'desc');
+            }
+        }
+
+        $events = $query->paginate(8);
+
+        $locations = \App\Models\Event::select('location')->distinct()->pluck('location');
+        $skills = \App\Models\Skill::all();
+
+        return view('volunteer.events', compact('events', 'locations', 'skills'));
     }
     public function profile()
     {
