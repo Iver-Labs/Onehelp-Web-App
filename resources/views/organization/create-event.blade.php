@@ -58,10 +58,7 @@
                 <button 
                     type="button"
                     id="generateDescriptionBtn"
-                    onclick="generateDescription()"
                     style="padding: 8px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2); display: flex; align-items: center; gap: 6px;"
-                    onmouseover="if(!this.disabled) { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(102, 126, 234, 0.3)'; }"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(102, 126, 234, 0.2)'"
                 >
                     <i id="generateBtnIcon" class="fas fa-bolt" style="font-size: 14px;"></i>
                     <span id="generateBtnText">Generate with AI</span>
@@ -250,7 +247,7 @@
     </form>
 </div>
 
-<script>
+<script nonce="{{ $cspNonce }}">
 async function generateDescription() {
     const eventName = document.querySelector('input[name="event_name"]').value;
     const category = document.querySelector('select[name="category"]').value;
@@ -355,6 +352,35 @@ function showNotification(message, type) {
         notification.style.animation = 'slideOut 0.3s ease-in';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
+}
+
+// Add event listeners - handle both loaded and loading states
+function initializeAIButton() {
+    // Generate button click handler
+    const generateBtn = document.getElementById('generateDescriptionBtn');
+    if (generateBtn) {
+        generateBtn.addEventListener('click', generateDescription);
+        
+        // Hover effects for generate button
+        generateBtn.addEventListener('mouseover', function() {
+            if (!this.disabled) {
+                this.style.transform = 'translateY(-1px)';
+                this.style.boxShadow = '0 4px 8px rgba(102, 126, 234, 0.3)';
+            }
+        });
+        
+        generateBtn.addEventListener('mouseout', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 2px 4px rgba(102, 126, 234, 0.2)';
+        });
+    }
+}
+
+// Initialize immediately if DOM is already loaded, otherwise wait for DOMContentLoaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeAIButton);
+} else {
+    initializeAIButton();
 }
 </script>
 @endsection
